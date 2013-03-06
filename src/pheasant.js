@@ -171,16 +171,16 @@
         re_hex6 = /^#([0-f]{2})([0-f]{2})([0-f]{2})$/,
 
         // match 'rgb(X, Y, Z)' strings
-        re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/,
+        re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
         
         // match 'rgb(X%, Y%, Z%)' strings
-        re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)/,
+        re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/,
 
         // match 'rgba(X, Y, Z, A)' strings
-        re_rgb_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)/,
+        re_rgb_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
         
         // match 'rgba(X%, Y%, Z%, A)' strings
-        re_rgb_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)/,
+        re_rgb_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
 
         /**
          * (helper) Force the given number to be in the 0-255 range.
