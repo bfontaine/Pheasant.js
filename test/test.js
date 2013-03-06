@@ -25,42 +25,46 @@ describe( 'Colors parsing', function() {
 
     });
 
-    it( 'should handle CSS/SVG color names', function() {
+    describe( 'CSS/SVG color names', function() {
 
-        expect( Pheasant.parse( 'black'   ).toString() ).to.equal( '#000' );
-        expect( Pheasant.parse( 'lime'    ).toString() ).to.equal( '#0f0' );
-        expect( Pheasant.parse( 'red'     ).toString() ).to.equal( '#f00' );
-        expect( Pheasant.parse( 'blue'    ).toString() ).to.equal( '#00f' );
-        expect( Pheasant.parse( 'white'   ).toString() ).to.equal( '#fff' );
-        expect( Pheasant.parse( 'fuchsia' ).toString() ).to.equal( '#f0f' );
+        it( 'should normalize strings with spaces before', function() {
 
-    });
+            expect( Pheasant.parse( '  black' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( '   lime' ).toString() ).to.equal( '#0f0' );
 
-    it( 'should handle short hex values (#XYZ)', function() {
+        });
 
-        expect( Pheasant.parse( '#000' ).toString() ).to.equal( '#000' );
-        expect( Pheasant.parse( '#f00' ).toString() ).to.equal( '#f00' );
-        expect( Pheasant.parse( '#00f' ).toString() ).to.equal( '#00f' );
-        expect( Pheasant.parse( '#fff' ).toString() ).to.equal( '#fff' );
-        expect( Pheasant.parse( '#f0f' ).toString() ).to.equal( '#f0f' );
+        it( 'should normalize strings with spaces after', function() {
 
-    });
+            expect( Pheasant.parse( 'black   ' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( 'lime    ' ).toString() ).to.equal( '#0f0' );
 
-    it( 'should handle hex values (#ABCDEF)', function() {
+        });
 
-        expect( Pheasant.parse( '#000000' ).toString() ).to.equal( '#000' );
-        expect( Pheasant.parse( '#0000ff' ).toString() ).to.equal( '#00f' );
-        expect( Pheasant.parse( '#ffffff' ).toString() ).to.equal( '#fff' );
-        expect( Pheasant.parse( '#ff00ff' ).toString() ).to.equal( '#f0f' );
+        it( 'should normalize strings with spaces both before and after', function() {
 
-    });
+            expect( Pheasant.parse( ' black   ' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( '  lime   ' ).toString() ).to.equal( '#0f0' );
 
-    it( 'should round short hex values (#XYZ) if necessary', function() {
+        });
 
-        expect( Pheasant.parse( '#000000' ).toString() ).to.equal( '#000' );
-        expect( Pheasant.parse( '#100000' ).toString() ).to.equal( '#100' );
-        expect( Pheasant.parse( '#1e0000' ).toString() ).to.equal( '#200' );
-        expect( Pheasant.parse( '#ff0000' ).toString() ).to.equal( '#f00' );
+        it( 'should normalize mixed-case strings', function() {
+
+            expect( Pheasant.parse( 'bLaCk' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( 'liME' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should handle CSS color names', function() {
+
+            expect( Pheasant.parse( 'black'   ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( 'lime'    ).toString() ).to.equal( '#0f0' );
+            expect( Pheasant.parse( 'red'     ).toString() ).to.equal( '#f00' );
+            expect( Pheasant.parse( 'blue'    ).toString() ).to.equal( '#00f' );
+            expect( Pheasant.parse( 'white'   ).toString() ).to.equal( '#fff' );
+            expect( Pheasant.parse( 'fuchsia' ).toString() ).to.equal( '#f0f' );
+
+        });
 
     });
 
