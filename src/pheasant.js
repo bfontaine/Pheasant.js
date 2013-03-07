@@ -18,9 +18,6 @@
             return ( s || '' ).toLocaleLowerCase().trim();
 
         },
-
-        // match 'rgb(X, Y, Z)' strings
-        re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
         
         // match 'rgb(X%, Y%, Z%)' strings
         re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/,
