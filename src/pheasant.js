@@ -36,7 +36,10 @@
          **/
         round = function( n ) {
 
-            return n > 255 ? 255 : n < 0 ? 0 : 0|n;
+            if ( n > 255 ) { return 255; }
+            if ( n < 0 ) { return 0; }
+
+            return Math.round( n );
         
         },
 
@@ -126,6 +129,15 @@
      **/
     Pheasant.Color.prototype.toString = function( format ) {
 
+        if (   isNaN( this.r )
+            || isNaN( this.g )
+            || isNaN( this.b )
+            || isNaN( this.a ) ) {
+
+            return null;
+       
+        }
+
         var stringifier;
 
         format = normalizeString( format || defaultStringFormat );
@@ -187,7 +199,9 @@
      *    first argument, and returns a Color object if it can parse
      *    it, or `null` if it can't (e.g. wrong formatting).
      *  - stringify [Function]: reverse of `parse` ; a function which
-     *    takes a Color object and return a formatted string.
+     *    takes a Color object and return a formatted string. It may
+     *    return `null` if it’s not possible to stringify the color,
+     *    e.g. there's a NaN value somewhere.
      *  - normalize [Boolean]: optional, default to `true`. If set to
      *    false, the parsed string is not normalized, i.e. the case and
      *    trailing spaces are preserved.
@@ -466,7 +480,11 @@
 
             },
             stringify: function stringifyHex3( c ) {
+
+                if ( !c || !c.getRGB ) { return null; }
+
                 return '#' + c.getRGB().map( to_hex( 1 ) ).join( '' );
+
             }
 
         };
@@ -499,7 +517,11 @@
 
             },
             stringify: function stringifyHex6( c ) {
+
+                if ( !c || !c.getRGB ) { return null; }
+
                 return '#' + c.getRGB().map( to_hex( 2 ) ).join( '' );
+
             }
 
         };
