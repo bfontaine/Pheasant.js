@@ -9,12 +9,251 @@
          * Default String format. Used for toString().
          **/
         defaultStringFormat = 'hex6',
+
+        /**
+         * (Helper) Normalize a string (lower-case and trim)
+         **/
+        normalizeString = function( s ) {
+
+            return ( s || '' ).toLocaleLowerCase().trim();
+
+        },
+
+        // match '#XYZ' strings
+        re_hex3 = /^#([0-f])([0-f])([0-f])$/,
+        
+        // match '#ABCDEF' strings
+        re_hex6 = /^#([0-f]{2})([0-f]{2})([0-f]{2})$/,
+
+        // match 'rgb(X, Y, Z)' strings
+        re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
+        
+        // match 'rgb(X%, Y%, Z%)' strings
+        re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/,
+
+        // match 'rgba(X, Y, Z, A)' strings
+        re_rgb_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
+        
+        // match 'rgba(X%, Y%, Z%, A)' strings
+        re_rgb_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
+
+        /**
+         * (helper) Force the given number to be in the 0-255 range.
+         **/
+        round = function( n ) {
+
+            return n > 255 ? 255 : n < 0 ? 0 : 0|n;
+        
+        },
+
+        /**
+         * (helper) Return a function which returns the hexadecimal
+         * representation of its first argument. @len is used to specify
+         * the length of the string output.
+         **/
+        to_hex = function( len ) {
+
+            if ( len === 2 ) {
+
+                return function( n ) {
+
+                    var h = round( n ).toString( 16 );
+
+                    return h.length === 1 ? '0' + h : h;
+
+                };
+
+            }
+
+            if ( len === 1 ) {
+
+                return function( n ) {
+
+                    var h = round( n ).toString( 16 ).charAt( 0 );
+
+                    if ( n%16 < 8 ) { return h; }
+
+                    return h === 'f' ? 'f' : ( 0|n/16 + 1 ).toString( 16 );
+
+                };
+
+            }
+
+
+            return function( n ) { return round( n ).toString( 16 ); };
+        }
+
+        /**
+         * (helper) Return a percentage value for the given integer, between
+         * 0 and 255.
+         **/
+        to_perc = function to_perc( n ) {
+            return round( n ) / 255;
+        }
+        ;
+
+
+    /**
+     * Registered color formats
+     **/
+    Pheasant.formats = {};
+
+    /**
+     * Color constructor
+     **/
+    Pheasant.Color = function( r, g, b, a ) {
+
+        if (!( this instanceof arguments.callee )) {
+            return new arguments.callee( r, g, b, a );
+        }
+
+        this.r = +r;
+        this.g = +g;
+        this.b = +b;
+        this.a = a === undefined ? 1 : +a;
+
+    };
+
+    /**
+     * Return an array of Red, Green and Blue values.
+     **/
+    Pheasant.Color.prototype.getRGB = function() {
+        return [ this.r, this.g, this.b ];
+    };
+
+    /**
+     * Return an array of Red, Green, Blue and Alpha values.
+     **/
+    Pheasant.Color.prototype.getRGBA = function() {
+        return [ this.r, this.g, this.b, this.a ];
+    };
+
+    /**
+     * Return a formatted string of the current color.
+     **/
+    Pheasant.Color.prototype.toString = function( format ) {
+
+        var stringifier;
+
+        format = normalizeString( format || defaultStringFormat );
+
+        if (!( format in Pheasant.formats )) {
+            format = defaultStringFormat;
+        }
+
+        stringifier = Pheasant.formats[ format ].stringify;
+
+        return typeof stringifier === 'function' ? stringifier( this ) : null;
+    };
+
+
+    /**
+     * Change the default string output format.
+     **/
+     Pheasant.setDefaultStringFormat = function setDefaultStringFormat( f ) {
+     
+         defaultStringFormat = normalizeString( f );
+     
+     };
+
+
+    /**
+     * Return a `Color` object using the given string, or `null` if it can't
+     * be parsed.
+     **/
+    Pheasant.parse = function parse( s ) {
+
+        var val, fmt, parser;
+
+        for ( fmt in Pheasant.formats ) {
+            if ( !Pheasant.formats.hasOwnProperty( fmt ) ) { continue; }
+
+            parser = Pheasant.formats[ fmt ].parse;
+
+            if ( typeof parser === 'function' && (val = parser( s ) )) { 
+
+                return val;
+
+            }
+
+        }
+
+        return null;
+
+    };
+
+    /**
+     * Register a new color format.
+     * @fmt [Object]: the format. It must be an object,
+     * with the following properties:
+     *  - name [String]: its name. It should be unique (case-insensitive),
+     *    otherwise it may override a previously registered format or
+     *    be overrided. It may also be an array of Strings ; each
+     *    non-already-bound name will be used for this format.
+     *  - parse [Function]: a function which takes a string as its
+     *    first argument, and returns a Color object if it can parse
+     *    it, or `null` if it can't (e.g. wrong formatting).
+     *  - stringify [Function]: reverse of `parse` ; a function which
+     *    takes a Color object and return a formatted string.
+     **/
+    Pheasant.addFormat = function addFormat( fmt ) {
+
+        var obj = {
+            parse: fmt.parse,
+            stringify: fmt.stringify
+        }, i, len, names;
+
+        if ( !fmt || !fmt.name || (!fmt.parse && !fmt.stringify) ) {
+
+            return null;
+
+        }
+
+        if ( fmt.name.splice && fmt.name.length >= 0 ) { // is an array
+
+            names = fmt.name;
+
+            for ( i=0, len=names.length; i<len; i++ ) {
+
+                // already bounded
+                if ( names[ i ] in Pheasant.formats ) { continue; }
+
+                name = normalizeString( names[ i ] );
+
+                Pheasant.formats[ name ] = obj;
+
+            }
+
+            return;
+
+        }
+
+        Pheasant.formats[ normalizeString( fmt.name ) ] = obj;
+
+    }
+
+    ctx.Pheasant = Pheasant;
+
+    /****************************************************************
+     * Registering formats                                          *
+     ****************************************************************/
+
+    /*
+        Check Pheasant#addFormat to see how to add a new format. Most
+        of the calls below use an IIFE as a closure to cache some
+        useful stuff (e.g. regexes).
+    */
+
+    /**
+     * CSS/SVG color names, e.g. 'white', 'blue', 'lime', etc.
+     **/
+    Pheasant.addFormat((function() {
         
         /**
          * Legal CSS colors names
          * http://www.w3.org/TR/2010/PR-css3-color-20101028/#svg-color
          **/
-        cssColorsNames = {
+        var cssColorsNames = {
             aliceblue            : [ 240 , 248 , 255 ],
             antiquewhite         : [ 250 , 235 , 215 ],
             aqua                 : [ 0   , 255 , 255 ],
@@ -162,204 +401,112 @@
             whitesmoke           : [ 245 , 245 , 245 ],
             yellow               : [ 255 , 255 , 0   ],
             yellowgreen          : [ 154 , 205 , 50  ]
-        },
-
-        // match '#XYZ' strings
-        re_hex3 = /^#([0-f])([0-f])([0-f])$/,
+        };
         
-        // match '#ABCDEF' strings
-        re_hex6 = /^#([0-f]{2})([0-f]{2})([0-f]{2})$/,
+        return {
+            name: [ 'colorName', 'colourName' ],
+            parse: function( s ) {
 
-        // match 'rgb(X, Y, Z)' strings
-        re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
-        
-        // match 'rgb(X%, Y%, Z%)' strings
-        re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/,
+                s = normalizeString( s );
 
-        // match 'rgba(X, Y, Z, A)' strings
-        re_rgb_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
-        
-        // match 'rgba(X%, Y%, Z%, A)' strings
-        re_rgb_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
+                if ( cssColorsNames.hasOwnProperty(s) ) {
 
-        /**
-         * (helper) Force the given number to be in the 0-255 range.
-         **/
-        round = function( n ) {
+                    return Pheasant.Color.apply(null, cssColorsNames[s])
 
-            return n > 255 ? 255 : n < 0 ? 0 : 0|n;
-        
-        },
+                }
 
-        /**
-         * (helper) Return a function which returns the hexadecimal
-         * representation of its first argument. @len is used to specify
-         * the length of the string output.
-         **/
-        to_hex = function( len ) {
+                return null;
 
-            if ( len === 2 ) {
+            },
+            stringify: function( c ) {
 
-                return function( n ) {
+                var myVals = c.getRGB().join( ',' ), name;
 
-                    var h = round( n ).toString( 16 );
+                for ( name in cssColorsNames ) {
+                    if (!cssColorsNames.hasOwnProperty( name ) ) { continue; }
 
-                    return h.length === 1 ? '0' + h : h;
+                    if ( myVals === cssColorsNames[ name ].join( ',' ) ) {
+                        return name;
+                    }
 
-                };
+                }
+
+                return null;
 
             }
 
-            if ( len === 1 ) {
+        };
 
-                return function( n ) {
+    })());
 
-                    var h = round( n ).toString( 16 ).charAt( 0 );
+    /**
+     * Hex3, e.g. #XYZ.
+     **/
+    Pheasant.addFormat((function() {
 
-                    if ( n%16 < 8 ) { return h; }
+        var re_hex3 = /^#([0-f])([0-f])([0-f])$/;
 
-                    return h === 'f' ? 'f' : ( 0|n/16 + 1 ).toString( 16 );
+        return {
+            name: [ 'hex3', 'hexa3' ],
+            parse: function parseHex3( s ) {
+                var vals;
 
-                };
+                s = normalizeString( s );
 
+                if ( !re_hex3.test( s ) ) { return null; }
+            
+                re_hex3.lastIndex = 0;
+                
+                vals = re_hex3.exec( s ).slice( 1 ).map(function( n ) {
+                
+                    return parseInt(n, 16);
+                
+                });
+
+                return Pheasant.Color.apply( null, vals );
+
+            },
+            stringify: function stringifyHex3( c ) {
+                return '#' + c.getRGB().map( to_hex( 1 ) ).join( '' );
             }
 
+        };
 
-            return function( n ) { return round( n ).toString( 16 ); };
-        }
-
-        /**
-         * (helper) Return a percentage value for the given integer, between
-         * 0 and 255.
-         **/
-        to_perc = function to_perc( n ) {
-            return round( n ) / 255;
-        }
-
-        ;
-
+    })());
 
     /**
-     * Color constructor
+     * Hex6, e.g. #ABCDEF.
      **/
-    var Color = function( r, g, b, a ) {
+    Pheasant.addFormat((function() {
 
-        if (!( this instanceof arguments.callee )) {
-            return new arguments.callee( r, g, b, a );
-        }
+        var re_hex6 = /^#([0-f]{2})([0-f]{2})([0-f]{2})$/;
 
-        this.r = +r;
-        this.g = +g;
-        this.b = +b;
-        this.a = a === undefined ? 1 : +a;
+        return {
+            name: [ 'hex6', 'hexa6' ],
+            parse: function parseHex6( s ) {
+                var vals;
 
-        // shortcuts
-        this.values = [ +r, +g, +b ];
-        this.avalues = [ +r, +g, +b, this.a ];
+                s = normalizeString( s );
 
-    };
-
-    /**
-     * Return a formatted string of the current color. Supported formats:
-     * - hex3: #XYZ
-     * - hex6: #ABCDEF (default)
-     * - rgb: rgb(42, 42, 42)
-     * - rgb%: rgb(42%, 42%, 42%)
-     * - rgba: rgb(42, 42, 42, 0.42)
-     * - rgba%: rgb(42%, 42%, 42%, 0.42)
-     **/
-    Color.prototype.toString = function( format ) {
-
-        switch ( format ) {
-
-            case 'hex3':
-                return '#' + this.values.map( to_hex( 1 ) ).join( '' );
+                if ( !re_hex6.test( s ) ) { return null; }
             
-            case 'hex6':
-                return '#' + this.values.map( to_hex( 2 ) ).join( '' );
-            
-            case 'rgb':
-                return 'rgb(' + this.values.join( ',' ) + ')';
-            
-            case 'rgb%':
-                return 'rgb(' + this.values.map( to_perc ).join('%,') + '%)';
-            
-            case 'rgba':
-                return 'rgba(' + this.avalues.join( ',' ) + ')';
+                re_hex6.lastIndex = 0;
+                
+                vals = re_hex6.exec( s ).slice( 1 ).map(function( n ) {
+                
+                    return parseInt(n, 16);
+                
+                });
 
-            case 'rgba%':
-                return 'rgba(' + this.values.map( to_perc ).join('%,')
-                               + '%,' + this.a +  ')';
+                return Pheasant.Color.apply( null, vals );
 
-            default:
-                return this.toString( defaultStringFormat );    
+            },
+            stringify: function stringifyHex6( c ) {
+                return '#' + c.getRGB().map( to_hex( 2 ) ).join( '' );
+            }
 
-        }
+        };
 
-    };
-
-
-    /**
-     * Change the default string output format. Possible values:
-     * - hex3: #XYZ
-     * - hex6: #ABCDEF
-     * - rgb: rgb(42, 42, 42)
-     * - rgb%: rgb(42%, 42%, 42%)
-     * - rgba: rgb(42, 42, 42, 0.42)
-     * - rgba%: rgb(42%, 42%, 42%, 0.42)
-     **/
-     Pheasant.setDefaultStringFormat = function setDefaultStringFormat( f ) {
-     
-         defaultStringFormat = f.toLocaleLowerCase();
-     
-     }
-
-
-    /**
-     * Return a `Color` object using the given string, or `null` if it can't
-     * be parsed.
-     **/
-    Pheasant.parse = function parse( s ) {
-
-        var vals;
-
-        s = s.toLocaleLowerCase().trim();
-
-        // 1- test for existing color name
-        if ( s in cssColorsNames ) {
-            return Color.apply( null, cssColorsNames[ s ] );
-        }
-
-        // 2- test for #XYZ
-        if ( re_hex3.test( s ) ) {
-            
-            re_hex3.lastIndex = 0;
-            vals = re_hex3.exec( s ).slice( 1 ).map(function( n ) {
-                return parseInt(n, 16);
-            });
-
-            return Color.apply( null, vals );
-
-        }
-
-        // 3- test for #ABCDEF
-        if ( re_hex6.test( s ) ) {
-            
-            re_hex6.lastIndex = 0;
-            vals = re_hex6.exec( s ).slice( 1 ).map(function( n ) {
-                return parseInt(n, 16);
-            });
-
-            return Color.apply( null, vals );
-
-        }
-
-
-        return null;
-
-    };
-
-    ctx.Pheasant = Pheasant;
-    ctx.re = re_hex3;
+    })());
 
 })( typeof module === 'object' ? module.exports : this );
