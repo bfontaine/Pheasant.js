@@ -238,4 +238,46 @@ describe( 'Stringifying', function() {
 
     });
 
+    describe( 'to CSS/SVG color names', function() {
+
+        beforeEach(function() {
+
+            Pheasant.setDefaultStringFormat( 'colorname' );
+
+        });
+
+        it( 'should normalize colors with values higher than 255', function() {
+
+            expect( new Pheasant.Color( 256, 0, 0 ).toString() ).to.equal( 'red' );
+            expect( new Pheasant.Color( Infinity, 0, 4242 ).toString() ).to.equal( 'fuchsia' );
+
+        });
+
+        it( 'should normalize colors with negative values', function() {
+
+            expect( new Pheasant.Color( -1, 0, 0 ).toString() ).to.equal( 'black' );
+            expect( new Pheasant.Color( -Infinity, 128, -4242 ).toString() ).to.equal( 'green' );
+
+        });
+
+        it( 'should normalize colors with float values', function() {
+
+            expect( new Pheasant.Color( 0, 127.7, 0 ).toString() ).to.equal( 'green' );
+
+        });
+
+        it( 'should normalize colors with negative float values', function() {
+
+            expect( new Pheasant.Color( 0, -15.99, -1.42 ).toString() ).to.equal( 'black' );
+
+        });
+
+        it( 'should not handle colors with NaN values', function() {
+
+            expect( new Pheasant.Color( 0, NaN, 0 ).toString() ).to.be.null;
+
+        });
+
+    });
+
 });
