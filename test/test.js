@@ -172,7 +172,7 @@ describe( 'Parsing', function() {
 
         });
 
-        it( 'should normalize strings with spaces in it', function() {
+        it( 'should normalize strings with spaces in them', function() {
 
             expect( Pheasant.parse( 'rgb(0  ,255 , 0 )' ).toString() ).to.equal( '#0f0' );
 
@@ -324,7 +324,7 @@ describe( 'Stringifying', function() {
 
     });
 
-    describe( 'to RGB()', function() {
+    describe( 'to RGB() format', function() {
 
         beforeEach(function() {
 
