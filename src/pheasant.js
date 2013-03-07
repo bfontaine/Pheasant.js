@@ -528,4 +528,41 @@
 
     })());
 
+    /**
+     * RGB, e.g. rgb(42, 255, 2)
+     **/
+    Pheasant.addFormat((function() {
+
+        var re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/;
+
+        return {
+            name: 'rgb',
+            parse: function parseHex6( s ) {
+                var vals;
+
+                if ( !re_rgb_int.test( s ) ) { return null; }
+            
+                re_rgb_int.lastIndex = 0;
+                
+                vals = re_rgb_int.exec( s ).slice( 1 ).map(function( n ) {
+                
+                    return parseInt(n, 10);
+                
+                });
+
+                return Pheasant.Color.apply( null, vals );
+
+            },
+            stringify: function stringifyHex6( c ) {
+
+                if ( !c || !c.getRGB ) { return null; }
+
+                return 'rgb(' + c.getRGB().map(round).join( ',' ) + ')';
+
+            }
+
+        };
+
+    })());
+
 })( typeof module === 'object' ? module.exports : this );
