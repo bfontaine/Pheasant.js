@@ -19,12 +19,6 @@
 
         },
 
-        // match '#XYZ' strings
-        re_hex3 = /^#([0-f])([0-f])([0-f])$/,
-        
-        // match '#ABCDEF' strings
-        re_hex6 = /^#([0-f]{2})([0-f]{2})([0-f]{2})$/,
-
         // match 'rgb(X, Y, Z)' strings
         re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
         
@@ -67,13 +61,12 @@
 
             if ( len === 1 ) {
 
+                // truncate
                 return function( n ) {
 
-                    var h = round( n ).toString( 16 ).charAt( 0 );
-
-                    if ( n%16 < 8 ) { return h; }
-
-                    return h === 'f' ? 'f' : ( 0|n/16 + 1 ).toString( 16 );
+                    var h = round( n ).toString( 16 );
+                    
+                    return h.length === 1 ? '0' : h.charAt( 0 );
 
                 };
 
@@ -195,17 +188,28 @@
      *    it, or `null` if it can't (e.g. wrong formatting).
      *  - stringify [Function]: reverse of `parse` ; a function which
      *    takes a Color object and return a formatted string.
+     *  - normalize [Boolean]: optional, default to `true`. If set to
+     *    false, the parsed string is not normalized, i.e. the case and
+     *    trailing spaces are preserved.
      **/
     Pheasant.addFormat = function addFormat( fmt ) {
 
         var obj = {
             parse: fmt.parse,
             stringify: fmt.stringify
-        }, i, len, names;
+        }, i, len, names, p;
 
         if ( !fmt || !fmt.name || (!fmt.parse && !fmt.stringify) ) {
 
             return null;
+
+        }
+
+        if ( fmt.normalize !== false ) {
+
+            p = obj.parse;
+
+            obj.parse = function( s ) { return p( normalizeString( s ) ); }
 
         }
 
@@ -407,8 +411,6 @@
             name: [ 'colorName', 'colourName' ],
             parse: function( s ) {
 
-                s = normalizeString( s );
-
                 if ( cssColorsNames.hasOwnProperty(s) ) {
 
                     return Pheasant.Color.apply(null, cssColorsNames[s])
@@ -434,7 +436,6 @@
                 return null;
 
             }
-
         };
 
     })());
@@ -451,15 +452,13 @@
             parse: function parseHex3( s ) {
                 var vals;
 
-                s = normalizeString( s );
-
                 if ( !re_hex3.test( s ) ) { return null; }
             
                 re_hex3.lastIndex = 0;
                 
                 vals = re_hex3.exec( s ).slice( 1 ).map(function( n ) {
                 
-                    return parseInt(n, 16);
+                    return parseInt(n+n, 16);
                 
                 });
 
@@ -485,8 +484,6 @@
             name: [ 'hex6', 'hexa6' ],
             parse: function parseHex6( s ) {
                 var vals;
-
-                s = normalizeString( s );
 
                 if ( !re_hex6.test( s ) ) { return null; }
             
