@@ -436,7 +436,7 @@
             },
             stringify: function( c ) {
 
-                var myVals = c.getRGB().join( ',' ), name;
+                var myVals = c.getRGB().map(round).join( ',' ), name;
 
                 for ( name in cssColorsNames ) {
                     if (!cssColorsNames.hasOwnProperty( name ) ) { continue; }
