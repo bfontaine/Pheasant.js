@@ -287,6 +287,7 @@ describe( 'Parsing', function() {
 
             expect( Pheasant.parse( 'rGbA(0,0,255,0.1)' ).toString() ).to.equal( '#00f' );
             expect( Pheasant.parse( 'RGBA(0,0,255,0.9)' ).toString() ).to.equal( '#00f' );
+            expect( Pheasant.parse( 'RGBA(0,0,255,0.4)' ).a ).to.equal( 0.4 );
 
         });
 
@@ -299,6 +300,56 @@ describe( 'Parsing', function() {
 
     });
 
+    describe( 'of RGBA() strings with percentages', function() {
+
+        it( 'should normalize strings with spaces before', function() {
+
+            expect( Pheasant.parse( '  rgba(0%,0%,0%,1)' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( '  rgba(0%,100%,0%,1)' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize strings with spaces after', function() {
+
+            expect( Pheasant.parse( 'rgba(100%,0%,0%,1)   ' ).toString() ).to.equal( '#f00' );
+            expect( Pheasant.parse( 'rgba(0%,0%,100%,0) ' ).toString() ).to.equal( '#00f' );
+
+        });
+
+        it( 'should normalize strings with spaces both before and after', function() {
+
+            expect( Pheasant.parse( ' rgba(0%,100%,0%,1)   ' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize strings with spaces in them', function() {
+
+            expect( Pheasant.parse( 'rgba(0%  ,100% , 0% ,1)' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize mixed-case strings', function() {
+
+            expect( Pheasant.parse( 'rGbA(0%,0%,100%,1)' ).toString() ).to.equal( '#00f' );
+            expect( Pheasant.parse( 'RGBA(0%,0%,100%,1)' ).toString() ).to.equal( '#00f' );
+
+        });
+
+        it( 'should parse alpha channels as floats', function() {
+
+            expect( Pheasant.parse( 'rGbA(0%,0%,100%,0.1)' ).toString() ).to.equal( '#00f' );
+            expect( Pheasant.parse( 'RGBA(0%,0%,100%,0.9)' ).toString() ).to.equal( '#00f' );
+
+        });
+
+        it( 'should handle rgba() strings with percentages', function() {
+
+            expect( Pheasant.parse( 'rgba(0%,0%,0%,1)' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( 'rgba(0%,100%,0%,1)' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+    });
 
 });
 
@@ -566,6 +617,70 @@ describe( 'Stringifying', function() {
 
             expect( new Pheasant.Color( 0, 0, 0, 0.1 ).toString() ).to.equal( 'rgba(0,0,0,0.1)' );
             expect( new Pheasant.Color( 0, 0, 255, 0.6 ).toString() ).to.equal( 'rgba(0,0,255,0.6)' );
+
+        });
+
+        it( 'should not handle colors with NaN values', function() {
+
+            expect( new Pheasant.Color( 0, NaN, 0, 0 ).toString() ).to.be.null;
+            expect( new Pheasant.Color( 0, 0, 0, NaN ).toString() ).to.be.null;
+
+        });
+
+    });
+
+    describe( 'to RGBA() format, with percentages', function() {
+
+        beforeEach(function() {
+
+            Pheasant.setDefaultStringFormat( 'rgba%' );
+
+        });
+
+        it( 'should normalize colors with values higher than 255', function() {
+
+            expect( new Pheasant.Color( 256, 0, 0, 1 ).toString() ).to.equal( 'rgba(100%,0%,0%,1)' );
+            expect( new Pheasant.Color( Infinity, 0, 4242, 0 ).toString() ).to.equal( 'rgba(100%,0%,100%,0)' );
+
+        });
+
+        it( 'should normalize colors with negative values', function() {
+
+            expect( new Pheasant.Color( -1, 0, 0, 0 ).toString() ).to.equal( 'rgba(0%,0%,0%,0)' );
+            expect( new Pheasant.Color( -Infinity, 255, -4242, 1 ).toString() ).to.equal( 'rgba(0%,100%,0%,1)' );
+
+        });
+
+        it( 'should normalize colors with float values', function() {
+
+            expect( new Pheasant.Color( 0, 255.7, 0, 0 ).toString() ).to.equal( 'rgba(0%,100%,0%,0)' );
+
+        });
+
+        it( 'should normalize colors with negative float values', function() {
+
+            expect( new Pheasant.Color( 0, -15.99, -1.42, 1 ).toString() ).to.equal( 'rgba(0%,0%,0%,1)' );
+
+        });
+
+        it( 'should normalize alpha channels higher than 1', function() {
+
+            expect( new Pheasant.Color( 0, 0, 0, 42 ).toString() ).to.equal( 'rgba(0%,0%,0%,1)' );
+            expect( new Pheasant.Color( 0, 0, 0, 1.2 ).toString() ).to.equal( 'rgba(0%,0%,0%,1)' );
+
+        });
+
+        it( 'should normalize negative alpha channels', function() {
+
+            expect( new Pheasant.Color( 0, 255, 0, -42 ).toString() ).to.equal( 'rgba(0%,100%,0%,0)' );
+            expect( new Pheasant.Color( 0, 0, 0, -1.2 ).toString() ).to.equal( 'rgba(0%,0%,0%,0)' );
+
+        });
+
+        it( 'should keep alpha channels between 0 and 1 (non inclusive)', function() {
+
+            expect( new Pheasant.Color( 0, 0, 0, 0.1 ).toString() ).to.equal( 'rgba(0%,0%,0%,0.1)' );
+            expect( new Pheasant.Color( 0, 0, 255, 0.6 ).toString() ).to.equal( 'rgba(0%,0%,100%,0.6)' );
 
         });
 
