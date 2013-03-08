@@ -18,6 +18,15 @@ describe( 'Settings', function() {
 
         });
 
+        it( 'should normalize strings with spaces before and/or after', function() {
+
+            Pheasant.setDefaultStringFormat( '  hex3' );
+            expect( Pheasant.parse( '#000' ).toString() ).to.equal( '#000' );
+            Pheasant.setDefaultStringFormat( ' hex6  ' );
+            expect( Pheasant.parse( '#000' ).toString() ).to.equal( '#000000' );
+
+        });
+
         it( 'should normalize mixed-case strings', function() {
 
             Pheasant.setDefaultStringFormat( 'hEx3' );
