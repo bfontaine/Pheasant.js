@@ -18,9 +18,6 @@
             return ( s || '' ).toLocaleLowerCase().trim();
 
         },
-
-        // match 'rgba(X, Y, Z, A)' strings
-        re_rgba_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
         
         // match 'rgba(X%, Y%, Z%, A)' strings
         re_rgba_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
@@ -547,7 +544,7 @@
                 return Pheasant.Color.apply( null, vals );
 
             },
-            stringify: function stringifyHex6( c ) {
+            stringify: function stringifyRGB( c ) {
 
                 if ( !c || !c.getRGB ) { return null; }
 
@@ -591,6 +588,49 @@
                 return 'rgb(' + c.getRGB().map(function( n ) {
                     
                     return ( n > 255 ? 100 : n < 0 ? 0 : (0|n)/2.55 ) + '%';
+                
+                }).join( ',' ) + ')';
+
+            }
+
+        };
+
+    })());
+
+    /**
+     * RGBA, e.g. rgba(42, 255, 0.4)
+     **/
+    Pheasant.addFormat((function() {
+
+        var re_rgba_perc = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+)?)\s*\)$/;
+
+        return {
+            name: 'rgba',
+            parse: function parseRGBA( s ) {
+                var vals;
+
+                if ( !re_rgba_perc.test( s ) ) { return null; }
+            
+                re_rgba_perc.lastIndex = 0;
+                
+                vals = re_rgba_perc.exec( s ).slice( 1 ).map(function( n ) {
+                
+                    return parseFloat( n, 10 );
+                
+                });
+
+                return Pheasant.Color.apply( null, vals );
+
+            },
+            stringify: function stringifyRGBA( c ) {
+
+                if ( !c || !c.getRGBA ) { return null; }
+
+                return 'rgba(' + c.getRGBA().map(function( n, i ) {
+
+                    if ( i < 3 ) { return round( n ); }
+                    
+                    return ( n > 1 ? 1 : n < 0 ? 0 : n );
                 
                 }).join( ',' ) + ')';
 
