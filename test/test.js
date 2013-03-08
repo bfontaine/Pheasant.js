@@ -194,6 +194,50 @@ describe( 'Parsing', function() {
 
     });
 
+    describe( 'of RGB() strings, with percentages', function() {
+
+        it( 'should normalize strings with spaces before', function() {
+
+            expect( Pheasant.parse( '  rgb(0%,0%,0%)' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( '  rgb(0%,100%,0%)' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize strings with spaces after', function() {
+
+            expect( Pheasant.parse( 'rgb(100%,0%,0%)   ' ).toString() ).to.equal( '#f00' );
+            expect( Pheasant.parse( 'rgb(0%,0%,100%) ' ).toString() ).to.equal( '#00f' );
+
+        });
+
+        it( 'should normalize strings with spaces both before and after', function() {
+
+            expect( Pheasant.parse( ' rgb(0%,100%,0%)   ' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize strings with spaces in them', function() {
+
+            expect( Pheasant.parse( 'rgb(0%  ,100% , 0% )' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+        it( 'should normalize mixed-case strings', function() {
+
+            expect( Pheasant.parse( 'RgB(0%,0%,100%)' ).toString() ).to.equal( '#00f' );
+            expect( Pheasant.parse( 'RGB(0%,0%,100%)' ).toString() ).to.equal( '#00f' );
+
+        });
+
+        it( 'should handle RGB() strings with percentages', function() {
+
+            expect( Pheasant.parse( 'rgb(0%,0%,0%)' ).toString() ).to.equal( '#000' );
+            expect( Pheasant.parse( 'rgb(0%,100%,0%)' ).toString() ).to.equal( '#0f0' );
+
+        });
+
+    });
+
 });
 
 describe( 'Stringifying', function() {
@@ -355,6 +399,48 @@ describe( 'Stringifying', function() {
         it( 'should normalize colors with negative float values', function() {
 
             expect( new Pheasant.Color( 0, -15.99, -1.42 ).toString() ).to.equal( 'rgb(0,0,0)' );
+
+        });
+
+        it( 'should not handle colors with NaN values', function() {
+
+            expect( new Pheasant.Color( 0, NaN, 0 ).toString() ).to.be.null;
+
+        });
+
+    });
+
+    describe( 'to RGB() format, with percentages', function() {
+
+        beforeEach(function() {
+
+            Pheasant.setDefaultStringFormat( 'rgb%' );
+
+        });
+
+        it( 'should normalize colors with values higher than 255', function() {
+
+            expect( new Pheasant.Color( 256, 0, 0 ).toString() ).to.equal( 'rgb(100%,0%,0%)' );
+            expect( new Pheasant.Color( Infinity, 0, 4242 ).toString() ).to.equal( 'rgb(100%,0%,100%)' );
+
+        });
+
+        it( 'should normalize colors with negative values', function() {
+
+            expect( new Pheasant.Color( -1, 0, 0 ).toString() ).to.equal( 'rgb(0%,0%,0%)' );
+            expect( new Pheasant.Color( -Infinity, 255, -4242 ).toString() ).to.equal( 'rgb(0%,100%,0%)' );
+
+        });
+
+        it( 'should normalize colors with float values', function() {
+
+            expect( new Pheasant.Color( 0, 255.7, 0 ).toString() ).to.equal( 'rgb(0%,100%,0%)' );
+
+        });
+
+        it( 'should normalize colors with negative float values', function() {
+
+            expect( new Pheasant.Color( 0, -15.99, -1.42 ).toString() ).to.equal( 'rgb(0%,0%,0%)' );
 
         });
 

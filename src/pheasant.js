@@ -18,15 +18,12 @@
             return ( s || '' ).toLocaleLowerCase().trim();
 
         },
-        
-        // match 'rgb(X%, Y%, Z%)' strings
-        re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/,
 
         // match 'rgba(X, Y, Z, A)' strings
-        re_rgb_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
+        re_rgba_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+))\s*\)$/,
         
         // match 'rgba(X%, Y%, Z%, A)' strings
-        re_rgb_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
+        re_rgba_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))\s*\)$/,
 
         /**
          * (helper) Force the given number to be in the 0-255 range.
@@ -534,7 +531,7 @@
 
         return {
             name: 'rgb',
-            parse: function parseHex6( s ) {
+            parse: function parseRGB( s ) {
                 var vals;
 
                 if ( !re_rgb_int.test( s ) ) { return null; }
@@ -555,6 +552,47 @@
                 if ( !c || !c.getRGB ) { return null; }
 
                 return 'rgb(' + c.getRGB().map(round).join( ',' ) + ')';
+
+            }
+
+        };
+
+    })());
+
+    /**
+     * RGB with percentages, e.g. rgb(42%, 100%, 2%)
+     **/
+    Pheasant.addFormat((function() {
+
+        var re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
+
+        return {
+            name: 'rgb%',
+            parse: function parseRGBPerc( s ) {
+                var vals;
+
+                if ( !re_rgb_perc.test( s ) ) { return null; }
+            
+                re_rgb_perc.lastIndex = 0;
+                
+                vals = re_rgb_perc.exec( s ).slice( 1 ).map(function( n ) {
+                
+                    return parseInt( n, 10 ) * 255;
+                
+                });
+
+                return Pheasant.Color.apply( null, vals );
+
+            },
+            stringify: function stringifyRGBPerc( c ) {
+
+                if ( !c || !c.getRGB ) { return null; }
+
+                return 'rgb(' + c.getRGB().map(function( n ) {
+                    
+                    return ( n > 255 ? 100 : n < 0 ? 0 : (0|n)/2.55 ) + '%';
+                
+                }).join( ',' ) + ')';
 
             }
 
