@@ -41,23 +41,10 @@ describe( 'Parsing', function() {
 
     describe( 'of CSS/SVG color names', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
-            expect( Pheasant.parse( '  black' ).toString() ).to.equal( '#000' );
             expect( Pheasant.parse( '   lime' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( 'black   ' ).toString() ).to.equal( '#000' );
-            expect( Pheasant.parse( 'lime    ' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
-            expect( Pheasant.parse( ' black   ' ).toString() ).to.equal( '#000' );
             expect( Pheasant.parse( '  lime   ' ).toString() ).to.equal( '#0f0' );
 
         });
@@ -86,21 +73,10 @@ describe( 'Parsing', function() {
 
     describe( 'of hexadecimal strings of length 3', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
             expect( Pheasant.parse( '  #abc' ).toString() ).to.equal( '#abc' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( '#acc   ' ).toString() ).to.equal( '#acc' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
-            expect( Pheasant.parse( '  #0ce   ' ).toString() ).to.equal( '#0ce' );
             expect( Pheasant.parse( ' #110    ' ).toString() ).to.equal( '#110' );
 
         });
@@ -125,21 +101,10 @@ describe( 'Parsing', function() {
 
     describe( 'of hexadecimal strings of length 6', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
             expect( Pheasant.parse( '  #abcdef' ).toString() ).to.equal( '#ace' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( '#ab0def   ' ).toString() ).to.equal( '#a0e' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
-            expect( Pheasant.parse( '  #a0a0fe   ' ).toString() ).to.equal( '#aaf' );
             expect( Pheasant.parse( ' #110ccc    ' ).toString() ).to.equal( '#10c' );
 
         });
@@ -164,22 +129,10 @@ describe( 'Parsing', function() {
 
     describe( 'of RGB() strings', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
             expect( Pheasant.parse( '  rgb(0,0,0)' ).toString() ).to.equal( '#000' );
-            expect( Pheasant.parse( '  rgb(0,255,0)' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
-            expect( Pheasant.parse( 'rgb(255,0,0)   ' ).toString() ).to.equal( '#f00' );
             expect( Pheasant.parse( 'rgb(0,0,255) ' ).toString() ).to.equal( '#00f' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
             expect( Pheasant.parse( ' rgb(0,255,0)   ' ).toString() ).to.equal( '#0f0' );
 
         });
@@ -208,22 +161,10 @@ describe( 'Parsing', function() {
 
     describe( 'of RGB() strings, with percentages', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
             expect( Pheasant.parse( '  rgb(0%,0%,0%)' ).toString() ).to.equal( '#000' );
-            expect( Pheasant.parse( '  rgb(0%,100%,0%)' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( 'rgb(100%,0%,0%)   ' ).toString() ).to.equal( '#f00' );
-            expect( Pheasant.parse( 'rgb(0%,0%,100%) ' ).toString() ).to.equal( '#00f' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
             expect( Pheasant.parse( ' rgb(0%,100%,0%)   ' ).toString() ).to.equal( '#0f0' );
 
         });
@@ -252,22 +193,10 @@ describe( 'Parsing', function() {
 
     describe( 'of RGBA() strings', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
-            expect( Pheasant.parse( '  rgba(0,0,0,1)' ).toString() ).to.equal( '#000' );
             expect( Pheasant.parse( '  rgba(0,255,0,1)' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( 'rgba(255,0,0,1)   ' ).toString() ).to.equal( '#f00' );
-            expect( Pheasant.parse( 'rgba(0,0,255,0) ' ).toString() ).to.equal( '#00f' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
             expect( Pheasant.parse( ' rgba(0,255,0,1)   ' ).toString() ).to.equal( '#0f0' );
 
         });
@@ -304,22 +233,10 @@ describe( 'Parsing', function() {
 
     describe( 'of RGBA() strings with percentages', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
-            expect( Pheasant.parse( '  rgba(0%,0%,0%,1)' ).toString() ).to.equal( '#000' );
             expect( Pheasant.parse( '  rgba(0%,100%,0%,1)' ).toString() ).to.equal( '#0f0' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
-            expect( Pheasant.parse( 'rgba(100%,0%,0%,1)   ' ).toString() ).to.equal( '#f00' );
             expect( Pheasant.parse( 'rgba(0%,0%,100%,0) ' ).toString() ).to.equal( '#00f' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
             expect( Pheasant.parse( ' rgba(0%,100%,0%,1)   ' ).toString() ).to.equal( '#0f0' );
 
         });
@@ -355,20 +272,10 @@ describe( 'Parsing', function() {
 
     describe( 'of HSL() strings', function() {
 
-        it( 'should normalize strings with spaces before', function() {
+        it( 'should normalize strings with spaces before and/or after', function() {
 
             expect( Pheasant.parse( '  hsl(0,100%,50%)' ).toString() ).to.equal( '#f00' );
-
-        });
-
-        it( 'should normalize strings with spaces after', function() {
-
             expect( Pheasant.parse( 'hsl(0,100%,50%) ' ).toString() ).to.equal( '#f00' );
-
-        });
-
-        it( 'should normalize strings with spaces both before and after', function() {
-
             expect( Pheasant.parse( '  hsl(0,100%,50%) ' ).toString() ).to.equal( '#f00' );
 
         });
