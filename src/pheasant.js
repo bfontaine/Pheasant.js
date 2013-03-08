@@ -108,6 +108,8 @@
      **/
     Pheasant.Color.prototype.toString = function( format ) {
 
+        var stringifier;
+
         if (   isNaN( this.r )
             || isNaN( this.g )
             || isNaN( this.b )
@@ -116,8 +118,6 @@
             return null;
        
         }
-
-        var stringifier;
 
         format = normalizeString( format || defaultStringFormat );
 
@@ -175,8 +175,15 @@
      *    be overrided. It may also be an array of Strings ; each
      *    non-already-bound name will be used for this format.
      *  - parse [Function]: a function which takes a string as its
-     *    first argument, and returns a Color object if it can parse
-     *    it, or `null` if it can't (e.g. wrong formatting).
+     *    first argument, and returns an object or an array if it can parse
+     *    it, or `null` if it can't (e.g. wrong formatting). The object
+     *    should have the following properties:
+     *    - red [Number]: an integer between 0 and 255 (default: 0)
+     *    - blue [Number]: an integer between 0 and 255 (default: 0)
+     *    - green [Number]: an integer between 0 and 255 (default: 0)
+     *    - alpha [Number]: a number between 0 and 1 (default: 1)
+     *    The function can also return an array of 3 or 4 values, representing
+     *    the red, blue, green (and optionally alpha) channels.
      *  - stringify [Function]: reverse of `parse` ; a function which
      *    takes a Color object and return a formatted string. It may
      *    return `null` if it’s not possible to stringify the color,
@@ -187,16 +194,42 @@
      **/
     Pheasant.addFormat = function addFormat( fmt ) {
 
-        var obj = {
-            parse: fmt.parse,
-            stringify: fmt.stringify
-        }, i, len, names, p;
+        var obj, i, len, names, p;
 
         if ( !fmt || !fmt.name || (!fmt.parse && !fmt.stringify) ) {
 
             return null;
 
         }
+
+        obj = {
+            parse: function( s ) {
+                var color = fmt.parse( s ), alpha;
+
+                if ( !color ) { return null; }
+
+                // array
+
+                if ( color.length > 2 && color.splice ) {
+
+                    return Pheasant.Color.apply( null, color );
+
+                }
+
+                // object
+
+                alpha = isNaN(color.alpha) ? 1 : color.alpha;
+
+                return new Pheasant.Color(
+                    color.red || 0,
+                    color.green || 0,
+                    color.blue || 0,
+                    alpha
+                );
+
+            },
+            stringify: fmt.stringify
+        };
 
         if ( fmt.normalize !== false ) {
 
@@ -408,7 +441,7 @@
 
                 if ( cssColorsNames.hasOwnProperty(s) ) {
 
-                    return Pheasant.Color.apply(null, cssColorsNames[s])
+                    return cssColorsNames[s];
 
                 }
 
@@ -459,7 +492,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyHex3( c ) {
@@ -496,7 +529,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyHex6( c ) {
@@ -533,7 +566,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyRGB( c ) {
@@ -572,7 +605,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyRGBPerc( c ) {
@@ -613,7 +646,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyRGBA( c ) {
@@ -658,7 +691,7 @@
                 
                 });
 
-                return Pheasant.Color.apply( null, vals );
+                return vals;
 
             },
             stringify: function stringifyRGBAPerc( c ) {
@@ -729,7 +762,7 @@
 
                 rgb = rgb1.map(function( n ) { return (n + m) * 255; });
 
-                return Pheasant.Color.apply( null, rgb );
+                return rgb;
 
             },
             stringify: function stringifyHSL( c ) {
