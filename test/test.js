@@ -353,6 +353,52 @@ describe( 'Parsing', function() {
 
     });
 
+    describe( 'of HSL() strings', function() {
+
+        it( 'should normalize strings with spaces before', function() {
+
+            expect( Pheasant.parse( '  hsl(0,100%,50%)' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize strings with spaces after', function() {
+
+            expect( Pheasant.parse( 'hsl(0,100%,50%) ' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize strings with spaces both before and after', function() {
+
+            expect( Pheasant.parse( '  hsl(0,100%,50%) ' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize strings with spaces in them', function() {
+
+            expect( Pheasant.parse( 'hsl( 0 ,  100% , 50%  )' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize mixed-case strings', function() {
+
+            expect( Pheasant.parse( 'HSL(0,100%,50%)' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should handle hsl() strings', function() {
+
+            Pheasant.setDefaultStringFormat( 'colorname' );
+
+            expect( Pheasant.parse( 'hsl(0,100%,50%)'   ).toString() ).to.equal( 'red' );
+            expect( Pheasant.parse( 'hsl(240,100%,50%)' ).toString() ).to.equal( 'blue' );
+            expect( Pheasant.parse( 'hsl(360,100%,0%)' ).toString() ).to.equal( 'black' );
+            expect( Pheasant.parse( 'hsl(120,100%,25%)' ).toString() ).to.equal( 'green' );
+            expect( Pheasant.parse( 'hsl(120,100%,50%)' ).toString() ).to.equal( 'lime' );
+
+        });
+
+    });
+
 });
 
 describe( 'Stringifying', function() {

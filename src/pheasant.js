@@ -679,4 +679,69 @@
 
     })());
 
+    /**
+     * HSL, e.g. hsl(330, 42%, 12%)
+     **/
+    Pheasant.addFormat((function() {
+
+        var re_hsl = /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
+
+        return {
+            name: 'hsl',
+            parse: function parseHSL( s ) {
+
+                var vals,
+                    h, s, l,
+                    c, h2, x, rgb1, m, rgb;
+
+                if ( !re_hsl.test( s ) ) { return null; }
+            
+                re_hsl.lastIndex = 0;
+                
+                vals = re_hsl.exec( s ).slice( 1 ).map(function( n ) {
+
+                    return parseInt( n, 10 );
+                
+                });
+
+                // conversion process from:
+                // http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+
+                h = vals[ 0 ]; // Hue
+                s = vals[ 1 ] / 100; // Saturation
+                l = vals[ 2 ] / 100; // Lightness
+
+                // chroma
+                c = ( 1 - Math.abs( 2 * l - 1 ) ) * s;
+                h2 = h / 60;
+                x = c * ( 1 - Math.abs( h2 % 2 - 1 ) );
+
+                rgb1 = [ 0, 0, 0 ];
+
+                /**/ if ( h2 >= 0 && h2 < 1 ) { rgb1 = [ c, x, 0 ]; } 
+                else if ( h2 >= 1 && h2 < 2 ) { rgb1 = [ x, c, 0 ]; }
+                else if ( h2 >= 2 && h2 < 3 ) { rgb1 = [ 0, c, x ]; }
+                else if ( h2 >= 3 && h2 < 4 ) { rgb1 = [ 0, x, c ]; }
+                else if ( h2 >= 4 && h2 < 5 ) { rgb1 = [ x, 0, c ]; }
+                else if ( h2 >= 5 && h2 < 6 ) { rgb1 = [ c, 0, x ]; }
+
+                m = l - c / 2;
+
+                rgb = rgb1.map(function( n ) { return (n + m) * 255; });
+
+                return Pheasant.Color.apply( null, rgb );
+
+            },
+            stringify: function stringifyHSL( c ) {
+
+                if ( !c || !c.getRGB ) { return null; }
+
+                return null; // Not Implemented
+
+            }
+
+        };
+
+    })());
+
 })( typeof module === 'object' ? module.exports : this );
