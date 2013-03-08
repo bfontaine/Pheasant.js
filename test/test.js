@@ -78,6 +78,8 @@ describe( 'Parsing', function() {
             expect( Pheasant.parse( 'white'   ).toString() ).to.equal( '#fff' );
             expect( Pheasant.parse( 'fuchsia' ).toString() ).to.equal( '#f0f' );
 
+            expect( Pheasant.parse( 'transparent' ).toString( 'rgba' ) ).to.equal( 'rgba(0,0,0,0)' );
+
         });
 
     });
