@@ -49,6 +49,16 @@ describe( 'Parsing', function() {
 
     });
 
+    describe( 'of unknown formats', function() {
+
+        it( 'should return null', function() {
+
+            expect( Pheasant.parse( '$&!@' ) ).to.be.null;
+
+        });
+
+    });
+
     describe( 'of CSS/SVG color names', function() {
 
         it( 'should normalize strings with spaces before and/or after', function() {
@@ -320,6 +330,16 @@ describe( 'Parsing', function() {
 
 describe( 'Stringifying', function() {
 
+    describe( 'to unknown formats', function () {
+
+        it( 'should return null', function() {
+
+            expect( new Pheasant.Color(0,0,0).toString( '&#!$' ) ).to.be.null;
+
+        });
+
+    });
+
     describe( 'to Hex3 format (#xyz)', function() {
 
         beforeEach(function() {
@@ -441,6 +461,12 @@ describe( 'Stringifying', function() {
         it( 'should not handle colors with NaN values', function() {
 
             expect( new Pheasant.Color( 0, NaN, 0 ).toString() ).to.be.null;
+
+        });
+
+        it( 'should return null if there\'s no name for the current color', function() {
+
+            expect( new Pheasant.Color( 1, 1, 1 ).toString() ).to.be.null;
 
         });
 
@@ -655,6 +681,56 @@ describe( 'Stringifying', function() {
             expect( new Pheasant.Color( 0, 0, 0, NaN ).toString() ).to.be.null;
 
         });
+
+    });
+
+});
+
+describe( 'addFormat', function() {
+
+    var _formats = Pheasant.formats;
+
+    beforeEach(function() {
+
+        Pheasant.formats = [];
+
+    });
+
+    afterEach(function() {
+
+        Pheasant.formats = _formats;
+
+    });
+
+    it( 'should return null if the format is not valid', function() {
+
+        expect( Pheasant.addFormat( 42 ) ).to.be.null;
+        expect( Pheasant.addFormat( [] ) ).to.be.null;
+        expect( Pheasant.addFormat( 'foo' ) ).to.be.null;
+        expect( Pheasant.addFormat( null ) ).to.be.null;
+        expect( Pheasant.addFormat( undefined ) ).to.be.null;
+
+    });
+
+    it( 'should return null if the format has no name', function() {
+
+        expect( Pheasant.addFormat({ parse: function(){} }) ).to.be.null;
+        expect( Pheasant.addFormat({ stringify: function(){} }) ).to.be.null;
+
+    });
+
+    it( 'should return null if the format has no .parse nor .stringify property', function() {
+
+        expect( Pheasant.addFormat({ name: 'foo' }) ).to.be.null;
+
+    });
+
+    it( 'should return the name of the new format', function() {
+
+        var noop = function(s){};
+
+        expect( Pheasant.addFormat({ name: 'foo', parse: noop }) ).to.equal( 'foo' );
+        expect( Pheasant.addFormat({ name: ' bAr  ', parse: noop }) ).to.equal( 'bar' );
 
     });
 
