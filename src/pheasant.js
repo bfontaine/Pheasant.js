@@ -76,10 +76,14 @@
             return new arguments.callee( r, g, b, a );
         }
 
-        this.r = +r;
-        this.g = +g;
-        this.b = +b;
-        this.a = a === undefined ? 1 : +a;
+        if ( typeof r !== 'number' ) { r = 0; }
+        if ( typeof g !== 'number' ) { g = 0; }
+        if ( typeof b !== 'number' ) { b = 0; }
+
+        this.red = +r;
+        this.green = +g;
+        this.blue = +b;
+        this.alpha = a === undefined ? 1 : +a;
 
     };
 
@@ -87,14 +91,14 @@
      * Return an array of Red, Green and Blue values.
      **/
     Pheasant.Color.prototype.getRGB = function() {
-        return [ this.r, this.g, this.b ];
+        return [ this.red, this.green, this.blue ];
     };
 
     /**
      * Return an array of Red, Green, Blue and Alpha values.
      **/
     Pheasant.Color.prototype.getRGBA = function() {
-        return [ this.r, this.g, this.b, this.a ];
+        return [ this.red, this.green, this.blue, this.alpha ];
     };
 
     /**
@@ -104,10 +108,10 @@
 
         var stringifier;
 
-        if (   isNaN( this.r )
-            || isNaN( this.g )
-            || isNaN( this.b )
-            || isNaN( this.a ) ) {
+        if (   isNaN( this.red )
+            || isNaN( this.green )
+            || isNaN( this.blue )
+            || isNaN( this.alpha ) ) {
 
             return null;
        
@@ -208,7 +212,7 @@
 
                 // array
 
-                if ( color.length > 2 && color.splice ) {
+                if ( color.length >= 0 && color.splice ) {
 
                     return Pheasant.Color.apply( null, color );
 
@@ -218,10 +222,14 @@
 
                 alpha = isNaN(color.alpha) ? 1 : color.alpha;
 
+                if (!( 'red'   in color )) { color.red   = 0; }
+                if (!( 'green' in color )) { color.green = 0; }
+                if (!( 'blue'  in color )) { color.blue  = 0; }
+
                 return new Pheasant.Color(
-                    color.red || 0,
-                    color.green || 0,
-                    color.blue || 0,
+                    color.red,
+                    color.green,
+                    color.blue,
                     alpha
                 );
 
