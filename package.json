@@ -1,6 +1,6 @@
 {
   "name": "pheasant",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Easy colors manipulations.",
   "main": "src/pheasant.js",
   "directories": {
