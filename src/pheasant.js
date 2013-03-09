@@ -198,7 +198,9 @@
 
         var obj, i, len, name, names, registered_names, p;
 
-        if ( !fmt || !fmt.name || (!fmt.parse && !fmt.stringify) ) {
+        if (   !fmt || !fmt.name
+            || (!fmt.parse && !fmt.stringify)
+            || fmt.name in Pheasant.formats ) {
 
             return null;
 
