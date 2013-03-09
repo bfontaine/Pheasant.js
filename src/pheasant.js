@@ -59,6 +59,32 @@
 
             };
 
+        },
+        
+        // convert from HSL to RGB
+        // cf http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+        hsl2rgb = function( h, s, l ) {
+
+            var c, h2, x, rgb1, m, rgb;
+
+            // chroma
+            c = ( 1 - Math.abs( 2 * l - 1 ) ) * s;
+            h2 = h / 60;
+            x = c * ( 1 - Math.abs( h2 % 2 - 1 ) );
+
+            rgb1 = [ 0, 0, 0 ];
+
+            /**/ if ( h2 >= 0 && h2 < 1 ) { rgb1 = [ c, x, 0 ]; } 
+            else if ( h2 >= 1 && h2 < 2 ) { rgb1 = [ x, c, 0 ]; }
+            else if ( h2 >= 2 && h2 < 3 ) { rgb1 = [ 0, c, x ]; }
+            else if ( h2 >= 3 && h2 < 4 ) { rgb1 = [ 0, x, c ]; }
+            else if ( h2 >= 4 && h2 < 5 ) { rgb1 = [ x, 0, c ]; }
+            else if ( h2 >= 5 && h2 < 6 ) { rgb1 = [ c, 0, x ]; }
+
+            m = l - c / 2;
+
+            return rgb1.map(function( n ) { return (n + m) * 255; });
+
         };
 
 
@@ -276,6 +302,7 @@
 
     }
 
+    // export
     ctx.Pheasant = Pheasant;
 
     /****************************************************************
@@ -735,9 +762,7 @@
             name: 'hsl',
             parse: function parseHSL( s ) {
 
-                var vals,
-                    h, s, l,
-                    c, h2, x, rgb1, m, rgb;
+                var vals;
 
                 if ( !re_hsl.test( s ) ) { return null; }
             
@@ -749,37 +774,55 @@
                 
                 });
 
-                // conversion process from:
-                // http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
-
-                h = vals[ 0 ]; // Hue
-                s = vals[ 1 ] / 100; // Saturation
-                l = vals[ 2 ] / 100; // Lightness
-
-                // chroma
-                c = ( 1 - Math.abs( 2 * l - 1 ) ) * s;
-                h2 = h / 60;
-                x = c * ( 1 - Math.abs( h2 % 2 - 1 ) );
-
-                rgb1 = [ 0, 0, 0 ];
-
-                /**/ if ( h2 >= 0 && h2 < 1 ) { rgb1 = [ c, x, 0 ]; } 
-                else if ( h2 >= 1 && h2 < 2 ) { rgb1 = [ x, c, 0 ]; }
-                else if ( h2 >= 2 && h2 < 3 ) { rgb1 = [ 0, c, x ]; }
-                else if ( h2 >= 3 && h2 < 4 ) { rgb1 = [ 0, x, c ]; }
-                else if ( h2 >= 4 && h2 < 5 ) { rgb1 = [ x, 0, c ]; }
-                else if ( h2 >= 5 && h2 < 6 ) { rgb1 = [ c, 0, x ]; }
-
-                m = l - c / 2;
-
-                rgb = rgb1.map(function( n ) { return (n + m) * 255; });
-
-                return rgb;
+                return hsl2rgb( vals[ 0 ], vals[ 1 ] / 100, vals[ 2 ] / 100 );
 
             },
             stringify: function stringifyHSL( c ) {
 
                 if ( !c || !c.getRGB ) { return null; }
+
+                return null; // Not Implemented
+
+            }
+
+        };
+
+    })());
+
+    /**
+     * HSLa, e.g. hsla(330, 42%, 12%, 0.45)
+     **/
+    Pheasant.addFormat((function() {
+
+        var re_hsla = /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))?\s*\)$/;
+
+        return {
+            name: 'hsla',
+            parse: function parseHSLa( s ) {
+
+                var vals, rgb;
+
+                if ( !re_hsla.test( s ) ) { return null; }
+            
+                re_hsla.lastIndex = 0;
+                
+                vals = re_hsla.exec( s ).slice( 1 ).map(function( n, i ) {
+
+                    if ( i > 2 ) { return parseFloat( n, 10 ); }
+
+                    return parseInt( n, 10 );
+                
+                });
+
+                rgb = hsl2rgb( vals[ 0 ], vals[ 1 ] / 100, vals[ 2 ] / 100 );
+                rgb.push( vals[ 3 ] ); // alpha
+
+                return rgb;
+
+            },
+            stringify: function stringifyHSLa( c ) {
+
+                if ( !c || !c.getRGBA ) { return null; }
 
                 return null; // Not Implemented
 

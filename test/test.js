@@ -3,7 +3,9 @@ var src      = process.env.PHEASANT_COV ? 'src-cov' : 'src',
     chai     = require( 'chai' ),
     
     expect   = chai.expect,
-    assert   = chai.assert;
+    assert   = chai.assert,
+    
+    noop     = function(){};
 
 describe( 'Settings', function() {
 
@@ -238,7 +240,7 @@ describe( 'Parsing', function() {
 
             expect( Pheasant.parse( 'rGbA(0,0,255,0.1)' ).toString() ).to.equal( '#00f' );
             expect( Pheasant.parse( 'RGBA(0,0,255,0.9)' ).toString() ).to.equal( '#00f' );
-            expect( Pheasant.parse( 'RGBA(0,0,255,0.4)' ).a ).to.equal( 0.4 );
+            expect( Pheasant.parse( 'RGBA(0,0,255,0.4)' ).alpha ).to.equal( 0.4 );
 
         });
 
@@ -321,6 +323,47 @@ describe( 'Parsing', function() {
             expect( Pheasant.parse( 'hsl(360,100%,0%)' ).toString() ).to.equal( 'black' );
             expect( Pheasant.parse( 'hsl(120,100%,25%)' ).toString() ).to.equal( 'green' );
             expect( Pheasant.parse( 'hsl(120,100%,50%)' ).toString() ).to.equal( 'lime' );
+
+        });
+
+    });
+
+    describe( 'of HSLa() strings', function() {
+
+        it( 'should normalize strings with spaces before and/or after', function() {
+
+            expect( Pheasant.parse( '  hsla(0,100%,50%,1)' ).toString() ).to.equal( '#f00' );
+            expect( Pheasant.parse( 'hsla(0,100%,50%,1) ' ).toString() ).to.equal( '#f00' );
+            expect( Pheasant.parse( '  hsla(0,100%,50%,1) ' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize strings with spaces in them', function() {
+
+            expect( Pheasant.parse( 'hsla( 0 ,  100% , 50% ,1 )' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should normalize mixed-case strings', function() {
+
+            expect( Pheasant.parse( 'HSLA(0,100%,50%,1)' ).toString() ).to.equal( '#f00' );
+
+        });
+
+        it( 'should handle hsla() strings', function() {
+
+            var hsla_red = 'hsla(0,100%,50%,1)',
+                rgba_red = 'rgba(255,0,0,1)';
+
+            Pheasant.setDefaultStringFormat( 'colorname' );
+
+            expect( Pheasant.parse( hsla_red ).toString() ).to.equal( 'red' );
+            expect( Pheasant.parse( 'hsla(240,100%,50%,1)' ).toString() ).to.equal( 'blue' );
+            expect( Pheasant.parse( 'hsla(360,100%,0%,1)' ).toString() ).to.equal( 'black' );
+            expect( Pheasant.parse( 'hsla(120,100%,25%,1)' ).toString() ).to.equal( 'green' );
+            expect( Pheasant.parse( 'hsla(120,100%,50%,1)' ).toString() ).to.equal( 'lime' );
+
+            expect( Pheasant.parse( hsla_red).toString( 'rgba' ) ).to.equal( rgba_red );
 
         });
 
@@ -686,7 +729,7 @@ describe( 'Stringifying', function() {
 
 });
 
-describe( 'addFormat', function() {
+describe( '.addFormat', function() {
 
     var _formats = Pheasant.formats;
 
@@ -725,12 +768,124 @@ describe( 'addFormat', function() {
 
     });
 
-    it( 'should return the name of the new format', function() {
-
-        var noop = function(s){};
+    it( 'should return the name(s) of the new format', function() {
 
         expect( Pheasant.addFormat({ name: 'foo', parse: noop }) ).to.equal( 'foo' );
-        expect( Pheasant.addFormat({ name: ' bAr  ', parse: noop }) ).to.equal( 'bar' );
+        expect( Pheasant.addFormat({ name: [ 'a', 'b' ], parse: noop }) ).to.deep.equal([ 'a', 'b' ]);
+
+    });
+
+    it( 'should wrap the returned value of .parse in a Color object', function() {
+    
+        var f1 = { name: 'f1',
+                   parse: function(s) { if (s=='1') return { red:1 }; } },
+            f2 = { name: 'f2',
+                   parse: function(s) { if (s=='2') return { red:1, green:2,
+                                                             blue:3 }; } },
+            f3 = { name: 'f3',
+                   parse: function(s) { if (s=='3') return { red:1, green:2,
+                                                             blue:3, alpha: 0.2 }; } },
+
+            f4 = { name: 'f4',
+                   parse: function(s) { if (s=='4') return [ 42 ]; } },
+            f5 = { name: 'f5',
+                   parse: function(s) { if (s=='5') return [ 42, 2, 3, 0.7 ]; } };
+
+
+        expect( Pheasant.addFormat(f1) ).to.equal( 'f1' );
+        expect( Pheasant.addFormat(f2) ).to.equal( 'f2' );
+        expect( Pheasant.addFormat(f3) ).to.equal( 'f3' );
+        expect( Pheasant.addFormat(f4) ).to.equal( 'f4' );
+        expect( Pheasant.addFormat(f5) ).to.equal( 'f5' );
+
+        expect( Pheasant.parse( '1' ).getRGBA() ).to.deep.equal([ 1, 0, 0, 1 ]);
+        expect( Pheasant.parse( '2' ).getRGBA() ).to.deep.equal([ 1, 2, 3, 1 ]);
+        expect( Pheasant.parse( '3' ).getRGBA() ).to.deep.equal([ 1, 2, 3, 0.2 ]);
+        expect( Pheasant.parse( '4' ).getRGBA() ).to.deep.equal([ 42, 0, 0, 1 ]);
+        expect( Pheasant.parse( '5' ).getRGBA() ).to.deep.equal([ 42, 2, 3, 0.7 ]);
+    
+    });
+
+    it( 'should return null if the format\'s name is already taken', function() {
+
+        var f1 = { name: 'f1', parse: function(){} },
+            f2 = { name: 'f1', parse: function(){} };
+
+        expect( Pheasant.addFormat( f1 ) ).to.equal( 'f1' );
+        expect( Pheasant.addFormat( f2 ) ).to.be.null;
+
+    });
+
+    it( 'should return an array of the format\' names if they\'re all available', function() {
+
+        var names = [ 'a', 'b', 'c' ];
+
+        expect( Pheasant.addFormat({ name: names, parse: noop }) ).to.deep.equal( names );
+
+    });
+
+    it( 'should return an array of the available format\' names if they\'re not all available', function() {
+
+        expect( Pheasant.addFormat({ name: 'a', parse: noop }) ).to.equal( 'a' );
+        expect( Pheasant.addFormat({ name: [ 'a', 'b' ], parse: noop }) ).to.deep.equal([ 'b' ]);
+
+    });
+
+    it( 'should return an empty array if no format\' names is available', function() {
+
+        expect( Pheasant.addFormat({ name: [ 'a', 'b', 'c' ], parse: noop }) ).to.deep.equal([ 'a', 'b', 'c' ]);
+        expect( Pheasant.addFormat({ name: [ 'a', 'b' ], parse: noop }) ).to.deep.equal( [] );
+
+    });
+
+    it( 'should not normalize the string to parse if .normalize is false', function() {
+    
+        var ref = '  fOObAR ',
+            f   = {
+            name: 'foo',
+            parse: function( s ) { expect( s ).to.equal( ref ); return {}; },
+            normalize: false
+        };
+
+        expect( Pheasant.addFormat( f ) ).to.equal( 'foo' );
+
+        Pheasant.parse( ref );
+    
+    });
+
+});
+
+describe( 'Color objects', function() {
+
+    it( 'should have a .getRGB() method', function() {
+
+        var c = new Pheasant.Color( 42, 78, 1 );
+
+        expect( c.getRGB() ).to.deep.equal([ 42, 78, 1 ]);
+
+    });
+
+    it( 'should have a .getRGBA() method', function() {
+
+        var c = new Pheasant.Color( 42, 78, 1, 0.1 );
+
+        expect( c.getRGBA() ).to.deep.equal([ 42, 78, 1, 0.1 ]);
+
+    });
+
+    it( 'should default red/green/blue values to 0', function() {
+
+        var c = new Pheasant.Color();
+
+        expect( c.getRGB() ).to.deep.equal([ 0, 0, 0 ]);
+
+    });
+
+    it( 'should default alpha values to 1', function() {
+
+        var c = new Pheasant.Color();
+
+        expect( c.getRGBA() ).to.deep.equal([ 0, 0, 0, 1 ]);
 
     });
 
