@@ -7,7 +7,7 @@
 | Format      | Parsing | Stringifying |
 |-------------|:-------:|:------------:|
 | color names | ✔       | ✔            |
-| hsl()       | ✔       | ✗            |
+| hsl()       | ✔       | ✔            |
 | hsla()      | ✔       | ✗            |
 | rgb()       | ✔       | ✔            |
 | rgba()      | ✔       | ✔            |

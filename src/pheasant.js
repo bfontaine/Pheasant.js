@@ -87,6 +87,44 @@
 
             return rgb1.map(function( n ) { return (n + m) * 255; });
 
+        },
+        
+        // convert from RGB to HSL
+        // cf http://www.easyrgb.com/index.php?X=MATH&H=18#text18
+        rgb2hsl = function( r, g, b ) {
+
+            var h, s, l,
+                min, max, delta, l, r2, g2, b2;
+
+            r = r / 255;
+            g = g / 255;
+            b = b / 255;
+
+            min = Math.min( r, g, b );
+            max = Math.max( r, g, b );
+            delta = max - min;
+
+            h = s = 0;
+            l = ( max + min ) / 2;
+
+            if ( delta !== 0 ) {
+
+                s = delta / ( l < 0.5 ? max + min : 2 - max - min );
+
+                r2 = ( ( max - r ) / 6 + delta / 2 ) / delta;
+                g2 = ( ( max - g ) / 6 + delta / 2 ) / delta;
+                b2 = ( ( max - b ) / 6 + delta / 2 ) / delta;
+
+                /**/ if ( r === max ) { h = b2 - g2; }
+                else if ( g === max ) { h = 1 / 3 + r2 - b2; }
+                else if ( b === max ) { h = 2 / 3 + g2 - r2; }
+
+                if ( h < 0 ) { h += 1 }
+                if ( h > 1 ) { h -= 1 }
+            }
+
+            return [ h * 360, s * 100, l * 100 ].map( Math.round );
+
         };
 
 
@@ -781,9 +819,17 @@
             },
             stringify: function stringifyHSL( c ) {
 
+                var hsl;
+
                 if ( !c || !c.getRGB ) { return null; }
 
-                return null; // Not Implemented
+                hsl = rgb2hsl.apply( null, c.getRGB().map( round ) );
+
+                return 'hsl(' + hsl.map(function( n, i ) {
+
+                    return i > 0 ? n + '%' : n;
+
+                }).join( ',' ) + ')';
 
             }
 

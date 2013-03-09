@@ -557,7 +557,7 @@ describe( 'Stringifying', function() {
 
     });
 
-    describe( 'to RGB() format, with percentages', function() {
+    describe( 'to RGB() format with percentages', function() {
 
         beforeEach(function() {
 
@@ -663,7 +663,7 @@ describe( 'Stringifying', function() {
 
     });
 
-    describe( 'to RGBA() format, with percentages', function() {
+    describe( 'to RGBA() format with percentages', function() {
 
         beforeEach(function() {
 
@@ -722,6 +722,46 @@ describe( 'Stringifying', function() {
 
             expect( new Pheasant.Color( 0, NaN, 0, 0 ).toString() ).to.be.null;
             expect( new Pheasant.Color( 0, 0, 0, NaN ).toString() ).to.be.null;
+
+        });
+
+    });
+
+    describe( 'to HSL() format', function() {
+
+        beforeEach(function() {
+
+            Pheasant.setDefaultStringFormat( 'hsl' );
+
+        });
+
+        it( 'should normalize colors with values higher than 255', function() {
+
+            expect( new Pheasant.Color( 256, 0, 0 ).toString() ).to.equal( 'hsl(0,100%,50%)' );
+
+        });
+
+        it( 'should normalize colors with negative values', function() {
+
+            expect( new Pheasant.Color( 255, -6, 0 ).toString() ).to.equal( 'hsl(0,100%,50%)' );
+
+        });
+
+        it( 'should normalize colors with float values', function() {
+
+            expect( new Pheasant.Color( 255.2, 0.4, 0 ).toString() ).to.equal( 'hsl(0,100%,50%)' );
+
+        });
+
+        it( 'should normalize colors with negative float values', function() {
+
+            expect( new Pheasant.Color( 255, -42.5, -7 ).toString() ).to.equal( 'hsl(0,100%,50%)' );
+
+        });
+
+        it( 'should not handle colors with NaN values', function() {
+
+            expect( new Pheasant.Color( 0, NaN, 0 ).toString() ).to.be.null;
 
         });
 
