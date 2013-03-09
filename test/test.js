@@ -1,4 +1,5 @@
-var Pheasant = require( __dirname + '/../src/pheasant' ).Pheasant,
+var src      = process.env.PHEASANT_COV ? 'src-cov' : 'src',
+    Pheasant = require( __dirname + '/../' + src + '/pheasant' ).Pheasant
     chai     = require( 'chai' ),
     
     expect   = chai.expect,
