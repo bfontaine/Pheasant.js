@@ -1,5 +1,7 @@
 ;(function(ctx, undefined) {
 
+    'use strict'
+
         /**
          * Main object
          **/
@@ -98,8 +100,8 @@
      **/
     Pheasant.Color = function( r, g, b, a ) {
 
-        if (!( this instanceof arguments.callee )) {
-            return new arguments.callee( r, g, b, a );
+        if (!( this instanceof Pheasant.Color )) {
+            return new Pheasant.Color( r, g, b, a );
         }
 
         if ( typeof r !== 'number' ) { r = 0; }
