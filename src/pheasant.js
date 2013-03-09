@@ -50,21 +50,15 @@
 
             }
 
-            if ( len === 1 ) {
+            // length 1 -> truncate
+            return function( n ) {
 
-                // truncate
-                return function( n ) {
+                var h = round( n ).toString( 16 );
+                
+                return h.length === 1 ? '0' : h.charAt( 0 );
 
-                    var h = round( n ).toString( 16 );
-                    
-                    return h.length === 1 ? '0' : h.charAt( 0 );
+            };
 
-                };
-
-            }
-
-
-            return function( n ) { return round( n ).toString( 16 ); };
         };
 
 
@@ -119,10 +113,14 @@
        
         }
 
-        format = normalizeString( format || defaultStringFormat );
+        if ( arguments.length === 0 ) {
 
-        if (!( format in Pheasant.formats )) {
             format = defaultStringFormat;
+
+        } else if (!( format in Pheasant.formats )) {
+
+            return null;
+
         }
 
         stringifier = Pheasant.formats[ format ].stringify;
@@ -194,7 +192,7 @@
      **/
     Pheasant.addFormat = function addFormat( fmt ) {
 
-        var obj, i, len, names, p;
+        var obj, i, len, name, names, registered_names, p;
 
         if ( !fmt || !fmt.name || (!fmt.parse && !fmt.stringify) ) {
 
@@ -242,6 +240,7 @@
         if ( fmt.name.splice && fmt.name.length >= 0 ) { // is an array
 
             names = fmt.name;
+            registered_names = [];
 
             for ( i=0, len=names.length; i<len; i++ ) {
 
@@ -251,14 +250,19 @@
                 name = normalizeString( names[ i ] );
 
                 Pheasant.formats[ name ] = obj;
+                registered_names.push( name )
 
             }
 
-            return;
+            return registered_names;
 
         }
 
-        Pheasant.formats[ normalizeString( fmt.name ) ] = obj;
+        name = normalizeString( fmt.name )
+
+        Pheasant.formats[ name ] = obj;
+
+        return name;
 
     }
 
@@ -599,9 +603,7 @@
                 
                 vals = re_rgb_perc.exec( s ).slice( 1 ).map(function( n, i ) {
 
-                    if ( i < 3 ) { return parseInt( n, 10 ) * 255; }
-                
-                    return parseFloat( n, 10 );
+                    return parseInt( n, 10 ) * 255;
                 
                 });
 
