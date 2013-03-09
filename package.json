@@ -1,0 +1,26 @@
+{
+  "name": "pheasant",
+  "version": "0.0.1",
+  "description": "Easy colors manipulations.",
+  "main": "src/pheasant.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bfontaine/Pheasant.js.git"
+  },
+  "keywords": [
+      "css",
+      "color"
+  ],
+  "author": "Baptiste Fontaine",
+  "license": "MIT",
+  "devDependencies": {
+      "mocha": "*",
+      "chai": "*"
+  }  
+}
