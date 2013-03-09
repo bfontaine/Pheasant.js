@@ -770,6 +770,49 @@ describe( 'Stringifying', function() {
 
     });
 
+    describe( 'to HSLa() format', function() {
+
+        beforeEach(function() {
+
+            Pheasant.setDefaultStringFormat( 'hsla' );
+
+        });
+
+        it( 'should normalize colors with values higher than 255', function() {
+
+            expect( new Pheasant.Color( 256, 0, 0 ).toString() ).to.equal( 'hsla(0,100%,50%,1)' );
+
+        });
+
+        it( 'should normalize colors with negative values', function() {
+
+            expect( new Pheasant.Color( 255, -6, 0, 0.2 ).toString() ).to.equal( 'hsla(0,100%,50%,0.2)' );
+
+        });
+
+        it( 'should normalize colors with float values', function() {
+
+            expect( new Pheasant.Color( 255.2, 0.4, 0, 1 ).toString() ).to.equal( 'hsla(0,100%,50%,1)' );
+
+        });
+
+        it( 'should normalize colors with negative float values', function() {
+
+            expect( new Pheasant.Color( 255, -42.5, -7, 1 ).toString() ).to.equal( 'hsla(0,100%,50%,1)' );
+
+        });
+
+        it( 'should not handle colors with NaN values', function() {
+
+            expect( new Pheasant.Color( 0, NaN, 0 ).toString() ).to.be.null;
+
+        });
+
+        expect( Pheasant.parse( 'hsl(120,100%,50%)' ).toString( 'hsla' ) ).to.equal( 'hsla(120,100%,50%,1)' );
+        expect( Pheasant.parse( 'hsl(240,100%,50%)' ).toString( 'hsla' ) ).to.equal( 'hsla(240,100%,50%,1)' );
+
+    });
+
 });
 
 describe( '.addFormat', function() {

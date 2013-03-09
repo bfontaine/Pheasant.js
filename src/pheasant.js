@@ -870,9 +870,19 @@
             },
             stringify: function stringifyHSLa( c ) {
 
-                if ( !c || !c.getRGBA ) { return null; }
+                var hsl;
 
-                return null; // Not Implemented
+                if ( !c || !c.getRGB ) { return null; }
+
+                hsl = rgb2hsl.apply( null, c.getRGB().map( round ) );
+
+                hsl.push( c.alpha );
+
+                return 'hsla(' + hsl.map(function( n, i ) {
+
+                    return i === 1 || i === 2 ? n + '%' : n;
+
+                }).join( ',' ) + ')';
 
             }
 
