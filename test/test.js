@@ -765,6 +765,9 @@ describe( 'Stringifying', function() {
 
         });
 
+        expect( Pheasant.parse( 'hsl(120,100%,50%)' ).toString( 'hsl' ) ).to.equal( 'hsl(120,100%,50%)' );
+        expect( Pheasant.parse( 'hsl(240,100%,50%)' ).toString( 'hsl' ) ).to.equal( 'hsl(240,100%,50%)' );
+
     });
 
 });
