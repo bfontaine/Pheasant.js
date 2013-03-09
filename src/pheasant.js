@@ -235,6 +235,20 @@
     };
 
     /**
+     * Convert a color in another format. This is shorter than
+     * a call to parse/toString for a one-time conversion.
+     * @s [String]: the string to convert
+     * @fmt [String]: the name of the format
+     **/
+    Pheasant.convert = function convert( s, fmt ) {
+
+        var c = Pheasant.parse( s );
+        
+        return c === null ? null : c.toString( fmt );
+
+    };
+
+    /**
      * Register a new color format.
      * @fmt [Object]: the format. It must be an object,
      * with the following properties:

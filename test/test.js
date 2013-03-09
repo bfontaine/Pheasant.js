@@ -941,6 +941,16 @@ describe( '.addFormat', function() {
 
 });
 
+describe( '.convert', function() {
+
+    it( 'should return null if the string is not a supported color format', function() {
+
+        expect( Pheasant.convert( '&$#*', 'hex3' ) ).to.be.null;
+
+    });
+
+});
+
 describe( 'Color objects', function() {
 
     it( 'should have a .getRGB() method', function() {
