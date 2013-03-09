@@ -1,5 +1,7 @@
 # Pheasant.js
 
+[![Build Status](https://travis-ci.org/bfontaine/Pheasant.js.png)](https://travis-ci.org/bfontaine/Pheasant.js)
+
 **Pheasant.js** makes colors manipulations easy.
 
 ## Install
