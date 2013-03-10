@@ -77,13 +77,13 @@ All standard CSS/SVG colors formats are supported.
 | color names | ✔       | ✔            | `colorName`, `colourName` |
 | hsl()       | ✔       | ✔            | `hsl`                     |
 | hsla()      | ✔       | ✔            | `hsla`                    |
-| rgb()*      | ✔       | ✔            | `rgb`                     |
-| rgba()*     | ✔       | ✔            | `rgba`                    |
+| rgb()\*     | ✔       | ✔            | `rgb`                     |
+| rgba()\*    | ✔       | ✔            | `rgba`                    |
 
 
 Format identifiers are case-insensitive.
 
-(*): The `rgb()` and `rgba()` formats also support percentages values, like
+(\*): The `rgb()` and `rgba()` formats also support percentages values, like
 `rgb(20%, 10%, 45%)` and `rgba(35%, 0%, 100%, 0.2)`. If you want to force
 percentages in the output, append `%` to each identifier: `rgb%` and `rgba%`.
 
