@@ -6,9 +6,17 @@
 
 ## Install
 
+### Server-side (Node)
+
 ```sh
 npm install pheasant
 ```
+
+### Client-side
+
+Include the `src/pheasant.js` file. There is not an available minified version
+for the moment; you have to make your own.
+
 
 ## Usage
 
@@ -30,6 +38,26 @@ Pheasant.parse( 'hsl(240, 100%, 50%)' ); // blue
 Pheasant.parse( 'hsla(120, 100%, 25%, 1)' ); // green
 ```
 
+### .convert
+
+This method takes two arguments, the first is the string to parse and the second
+is the identifier of the format to convert to.
+
+```js
+Pheasant.parse( 'pink' ).toString( 'rgba' ); // 'rgba(255,192,203,1)'
+Pheasant.convert( 'pink', 'rgba' ); // 'rgba(255,192,203,1)'
+```
+
+## Color objects
+
+You can create a `Color` object using the following constructor:
+
+```js
+var color = new Pheasant.Color( red, green, blue, alpha );
+```
+`alpha` is optional (default to 1), and `red`, `green` and `blue` should be
+integers between 0 and 255.
+
 `Color` objects has four attributes, `.red`, `.green`, `.blue` and `.alpha`.
 They also have two convenient methods: `.getRGB()` and `.getRGBA()`, which
 return an array of `.red`, `.green` and `.blue` properties, plus the `.alpha`
@@ -38,6 +66,8 @@ one for `.getRGBA()`.
 ```js
 Pheasant.parse( 'navy' ).blue; // 128
 ```
+
+### .toString
 
 You can use the `.toString()` method to convert colors to the format you want.
 Without argument, it convert the color to the default format (`#ABCDEF`). You
@@ -54,14 +84,18 @@ c.toString( 'hsl' ); // 'hsl(60,56%,91%)'
 Since it may be painful to write `Pheasant.parse( 'foo' ).toString( 'bar' )` for
 a one-time conversion, Pheasant has a method for that: `.convert`.
 
-### .convert
+### .negative
 
-This method takes two arguments, the first is the string to parse and the second
-is the identifier of the format to convert to.
+This method returns a new object representing the negative of the current color.
+It preserves the alpha channel.
 
-```js
-Pheasant.parse( 'pink' ).toString( 'rgba' ); // 'rgba(255,192,203,1)'
-Pheasant.convert( 'pink', 'rgba' ); // 'rgba(255,192,203,1)'
+```
+var c1 = new Pheasant.color( 42, 42, 42 ),
+    c2 = c1.negative();
+
+c2.getRGB(); // [ 213, 213, 213 ]
+
+Pheasant.parse( 'white' ).negative().toString( 'colorName' ); // 'black'
 ```
 
 ## Color Formats

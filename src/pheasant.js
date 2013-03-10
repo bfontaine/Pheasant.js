@@ -146,9 +146,9 @@
         if ( typeof g !== 'number' ) { g = 0; }
         if ( typeof b !== 'number' ) { b = 0; }
 
-        this.red = +r;
-        this.green = +g;
-        this.blue = +b;
+        this.red   = round( +r );
+        this.green = round( +g );
+        this.blue  = round( +b );
         this.alpha = a === undefined ? 1 : +a;
 
     };
@@ -198,6 +198,20 @@
         return typeof stringifier === 'function' ? stringifier( this ) : null;
     };
 
+    /**
+     * Return a new Color object, representing the negative of the current
+     * color.
+     **/
+    Pheasant.Color.prototype.negative = function() {
+
+        return new Pheasant.Color(
+            255 - this.red,
+            255 - this.green,
+            255 - this.blue,
+            this.alpha
+        );
+
+    };
 
     /**
      * Change the default string output format.

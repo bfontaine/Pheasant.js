@@ -1052,4 +1052,45 @@ describe( 'Color objects', function() {
 
     });
 
+    describe( '.negative', function() {
+
+        it( 'should be a function', function() {
+
+            expect( new Pheasant.Color().negative ).to.be.a( 'function' );
+
+        });
+
+        it( 'should be return a new Color object', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 ),
+                c2 = c1.negative(),
+                c3 = c2.negative();
+
+            expect( c2 ).to.not.equal( c1 );
+            expect( c3 ).to.not.equal( c1 );
+
+        });
+
+        it( 'should return the negative color of the current one', function() {
+
+            var c1 = new Pheasant.Color( 55, 55, 55 ),
+                c2 = c1.negative(),
+                c3 = c2.negative();
+
+            expect( c2.getRGB() ).to.deep.equal([ 200, 200, 200 ]);
+            expect( c3 ).to.deep.equal( c1 );
+
+        });
+
+        it( 'should not change the alpha channel value', function() {
+
+            var c1 = new Pheasant.Color( 42, 17, 25 ),
+                c2 = c1.negative();
+
+            expect( c2.alpha ).to.equal( c1.alpha );
+
+        });
+
+    });
+
 });
