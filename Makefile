@@ -13,4 +13,6 @@ test-cov:
 	PHEASANT_COV=1 mocha -R html-cov > coverage.html
 	rm -rf src-cov
 
+test-all: test test-client test-cov
+
 .PHONY: test
