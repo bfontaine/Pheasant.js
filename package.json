@@ -1,6 +1,6 @@
 {
   "name": "pheasant",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Easy colors manipulations.",
   "main": "src/pheasant.js",
   "directories": {
@@ -14,8 +14,7 @@
     "url": "https://github.com/bfontaine/Pheasant.js.git"
   },
   "keywords": [
-      "css",
-      "color"
+      "css", "color", "rgb", "hsl"
   ],
   "author": "Baptiste Fontaine",
   "license": "MIT",

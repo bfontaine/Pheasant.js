@@ -14,7 +14,7 @@ npm install pheasant
 
 ### Client-side
 
-Include the `src/pheasant.js` file. There is not an available minified version
+Include the `src/pheasant.js` file. There is no available minified version
 for the moment; you have to make your own.
 
 
@@ -167,7 +167,7 @@ argument, an object with the following properties:
   process force the string to lowercase and remove trailing spaces).
 - `test`: Optional. If it’s a function, it’ll be used to test whether a string
   is valid in this format or not. If it’s a regex, its `.test` method will be
-  used.
+  used. This attribute is used by the `.guessFormat` function.
 
 The object must provide the `parse` and/or `stringify` attributes, and must
 provide the `name` attribute.
@@ -211,8 +211,20 @@ open it in your favorite browser (it’s the `test/client.html` file). We can’
 use PhantomJS, because it [doesn’t][phantomjs-no-bind] have the
 `Function.prototype.bind` function.
 
+[phantomjs-no-bind]: https://code.google.com/p/phantomjs/issues/detail?id=522
+
 ## License
 
 See the LICENSE file (MIT).
 
-[phantomjs-no-bind]: https://code.google.com/p/phantomjs/issues/detail?id=522
+## Changes
+
+### v0.1.1 (10/03/2013)
+
+- `Color#negative` (#3)
+- `test` optional attribute support added on `.addFormat` argument
+- `Pheasant.guessFormat` added
+
+### v0.1.0 (09/03/2013)
+
+First version.
