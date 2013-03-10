@@ -1018,6 +1018,46 @@ describe( '.convert', function() {
 
 });
 
+describe( '.range', function() {
+
+    it( 'should return an empty array if the argument is not an object', function() {
+
+        expect( Pheasant.range( 42 ) ).to.deep.equal( [] );
+        expect( Pheasant.range( /foo/ ) ).to.deep.equal( [] );
+        expect( Pheasant.range( null ) ).to.deep.equal( [] );
+        expect( Pheasant.range( undefined ) ).to.deep.equal( [] );
+
+    });
+       
+    it( 'should return an empty array if its object has no `from` and `to` attributes', function() {
+
+        expect( Pheasant.range({ from: '#fff' }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ to: '#fff' }) ).to.deep.equal( [] );
+
+    });
+       
+    it( 'should return an empty array if its object has a negative length', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff', length:-1 }) ).to.deep.equal( [] );
+
+    });
+       
+    it( 'should return an empty array if `from` is not a string nor a Color object', function() {
+
+        expect( Pheasant.range({ from: 42, to: '#fff', length:-1 }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: {}, to: '#fff', length:-1 }) ).to.deep.equal( [] );
+
+    });
+       
+    it( 'should return an empty array if `to` is not a string nor a Color object', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: 42, length:-1 }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: '#fff', to: {}, length:-1 }) ).to.deep.equal( [] );
+
+    });
+
+});
+
 describe( '.guessFormat', function() {
 
     it( 'should return `null` if its argument is not a string', function() {
