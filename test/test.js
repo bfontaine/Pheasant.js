@@ -1010,6 +1010,12 @@ describe( '.convert', function() {
 
     });
 
+    it( 'should return null if the format is not supported', function() {
+
+        expect( Pheasant.convert( '&$#*', 'hex42' ) ).to.be.null;
+
+    });
+
 });
 
 describe( 'Color objects', function() {
