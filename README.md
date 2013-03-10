@@ -143,10 +143,10 @@ If your format has two names, `hex3` and `hex_3`, it will only be bound to
 `hex_3`, since `hex3` is not available.
 
 If you want to clear all the available formats, use the `Pheasant.formats`
-array:
+object:
 
 ```js
-Pheasant.formats.length = 0;
+Pheasant.formats = {};
 ```
 
 ## Tests
