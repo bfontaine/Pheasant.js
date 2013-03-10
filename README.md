@@ -24,7 +24,7 @@ Pheasant expose one object, `Pheasant`. It has the following methods:
 
 ### .parse
 
-This method return a `Pheasant.Color` object of the parsed string, or null if it
+This function return a `Pheasant.Color` object of the parsed string, or null if it
 can’t be parsed (see the support table below for the supported formats).
 
 ```js
@@ -40,12 +40,24 @@ Pheasant.parse( 'hsla(120, 100%, 25%, 1)' ); // green
 
 ### .convert
 
-This method takes two arguments, the first is the string to parse and the second
+This function takes two arguments, the first is the string to parse and the second
 is the identifier of the format to convert to.
 
 ```js
 Pheasant.parse( 'pink' ).toString( 'rgba' ); // 'rgba(255,192,203,1)'
 Pheasant.convert( 'pink', 'rgba' ); // 'rgba(255,192,203,1)'
+```
+
+### .guessFormat
+
+This function takes one argument, a string, and return the first identifier
+of its format, if it’s a supported one. It returns `null` if it can’t guess
+the format.
+
+```js
+Pheasant.guessFormat( '#ccc' ); // 'hex3'
+Pheasant.guessFormat( '#cccbbb' ); // 'hex6'
+Pheasant.guessFormat( '#cccb' ); // null
 ```
 
 ## Color objects

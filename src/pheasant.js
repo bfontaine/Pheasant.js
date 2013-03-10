@@ -63,8 +63,10 @@
 
         },
         
-        // convert from HSL to RGB
-        // cf http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+        /**
+         * (helper) convert from HSL to RGB
+         * cf http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+         **/
         hsl2rgb = function( h, s, l ) {
 
             var c, h2, x, rgb1, m, rgb;
@@ -89,8 +91,10 @@
 
         },
         
-        // convert from RGB to HSL
-        // cf http://www.easyrgb.com/index.php?X=MATH&H=18#text18
+        /**
+         * (helper) Convert from RGB to HSL
+         * cf http://www.easyrgb.com/index.php?X=MATH&H=18#text18
+         **/
         rgb2hsl = function( r, g, b ) {
 
             var h, s, l,
@@ -125,6 +129,30 @@
 
             return [ h * 360, s * 100, l * 100 ].map( Math.round );
 
+        },
+
+        /**
+         * Valid range types. See: Pheasant#range.
+         **/
+        rangeTypes = [ 'string', 'object', 'rgb', 'rgba' ],
+
+        /**
+         * (helper) Compare two colors, and return the differences between
+         * them, e.g.:
+         *      var c1 = new Pheasant.Color( 50, 100, 150 ),
+         *          c2 = new Pheasant.Color( 150, 100, 50 ):
+         *
+         *      cmpColors( c1, c2 ); // [ 100, 0, -100, 0 ]
+         **/
+        cmpColors = function cmpColors( c1, c2 ) {
+
+            return [
+                c2.red - c1.red,
+                c2.green - c1.green,
+                c2.blue - c1.blue,
+                c2.alpha - c1.alpha
+            ];
+
         };
 
 
@@ -132,6 +160,7 @@
      * Registered color formats
      **/
     Pheasant.formats = {};
+
 
     /**
      * Color constructor
@@ -214,16 +243,6 @@
     };
 
     /**
-     * Change the default string output format.
-     **/
-     Pheasant.setDefaultStringFormat = function setDefaultStringFormat( f ) {
-     
-         defaultStringFormat = normalizeString( f );
-     
-     };
-
-
-    /**
      * Return a `Color` object using the given string, or `null` if it can't
      * be parsed.
      **/
@@ -269,6 +288,42 @@
         return c === null ? null : c.toString( fmt );
 
     };
+
+    /**
+     * Change the default string output format.
+     **/
+     Pheasant.setDefaultStringFormat = function setDefaultStringFormat( f ) {
+     
+         defaultStringFormat = normalizeString( f );
+     
+     };
+
+     /**
+      * Guess the string's color format. Return a lowercase string, or `null` if
+      * the format is not valid/supported.
+      **/
+     Pheasant.guessFormat = function guessFormat( s ) {
+
+         var id, fmt;
+
+         if ( '' + s !== s ) { return null; }
+
+         for ( id in Pheasant.formats ) {
+            if ( !Pheasant.formats.hasOwnProperty( id ) ) { continue; }
+
+            fmt = Pheasant.formats[ id ];
+
+            if ( fmt.test && fmt.test( s ) ) {
+
+                return id;
+
+            }
+
+         }
+
+         return null;
+
+     };
 
     /**
      * Register a new color format.
@@ -400,7 +455,7 @@
 
         return name;
 
-    }
+    };
 
     // export
     ctx.Pheasant = Pheasant;

@@ -1018,6 +1018,35 @@ describe( '.convert', function() {
 
 });
 
+describe( '.guessFormat', function() {
+
+    it( 'should return `null` if its argument is not a string', function() {
+
+        expect( Pheasant.guessFormat( 42 ) ).to.be.null;
+        expect( Pheasant.guessFormat( {} ) ).to.be.null;
+        expect( Pheasant.guessFormat( [] ) ).to.be.null;
+        expect( Pheasant.guessFormat( /foo/ ) ).to.be.null;
+
+    });
+
+    it( 'should return `null` if the string is not in a valid format', function() {
+
+        expect( Pheasant.guessFormat( '&$@' ) ).to.be.null;
+
+    });
+
+    expect( Pheasant.guessFormat( '#333' ) ).to.equal( 'hex3' );
+    expect( Pheasant.guessFormat( '#ABCDEF' ) ).to.equal( 'hex6' );
+    expect( Pheasant.guessFormat( 'rgb(0,0,0)' ) ).to.equal( 'rgb' );
+    expect( Pheasant.guessFormat( 'rgba(0,0,0,0)' ) ).to.equal( 'rgba' );
+    expect( Pheasant.guessFormat( 'rgb(0%,0%,0%)' ) ).to.equal( 'rgb%' );
+    expect( Pheasant.guessFormat( 'rgba(0%,0%,0%,1)' ) ).to.equal( 'rgba%' );
+    expect( Pheasant.guessFormat( 'hsl(0,0%,0%)' ) ).to.equal( 'hsl' );
+    expect( Pheasant.guessFormat( 'hsla(0,0%,0%,1)' ) ).to.equal( 'hsla' );
+    expect( Pheasant.guessFormat( 'red' ) ).to.equal( 'colorname' );
+
+});
+
 describe( 'Color objects', function() {
 
     it( 'should have a .getRGB() method', function() {
