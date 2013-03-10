@@ -1,11 +1,14 @@
-var src      = process.env.PHEASANT_COV ? 'src-cov' : 'src',
-    Pheasant = require( __dirname + '/../' + src + '/pheasant' ).Pheasant
-    chai     = require( 'chai' ),
-    
-    expect   = chai.expect,
-    assert   = chai.assert,
-    
-    noop     = function(){};
+// for tests on Node only
+if ( typeof window === 'undefined' ) {
+
+    var src      = process.env.PHEASANT_COV ? 'src-cov' : 'src',
+        Pheasant = require( __dirname + '/../' + src + '/pheasant' ).Pheasant
+        chai     = require( 'chai' );
+
+}
+
+var     expect   = chai.expect,
+        noop     = function(){};
 
 describe( 'Settings', function() {
 

@@ -1,5 +1,12 @@
 test:
-	npm test
+	mocha
+
+# There's an issue with PhantomJS, Function.prototype.bind is undefined, so
+# the tests fail. So we have to use a workaround for the moment.
+# see https://code.google.com/p/phantomjs/issues/detail?id=522
+test-client:
+	@echo open file://`pwd`/test/client.html in your browser
+	@#mocha-phantomjs test/client.html
 
 test-cov:
 	jscoverage src src-cov

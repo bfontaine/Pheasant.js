@@ -160,6 +160,13 @@ cd Pheasant
 make
 ```
 
+To test on client-side, type `make test-client`. It should display a file URL,
+open it in your favorite browser (it’s the `test/client.html` file). We can’t
+use PhantomJS, because it [doesn’t][phantomjs-no-bind] have the
+`Function.prototype.bind` function.
+
 ## License
 
 See the LICENSE file (MIT).
+
+[phantomjs-no-bind]: https://code.google.com/p/phantomjs/issues/detail?id=522
