@@ -24,6 +24,7 @@ Pheasant.parse( 'red' ); // red
 Pheasant.parse( '#0F0' ); // green
 Pheasant.parse( '#0000FF' ); // blue
 Pheasant.parse( 'rgb(128, 128, 128)' ); // gray
+Pheasant.parse( 'rgb(10%, 10%, 10%, 0.3)' ); // transparent gray
 Pheasant.parse( 'rgba(255, 192, 203, 0.5)' ); // transparent pink
 Pheasant.parse( 'hsl(240, 100%, 50%)' ); // blue
 Pheasant.parse( 'hsla(120, 100%, 25%, 1)' ); // green
@@ -67,6 +68,8 @@ Pheasant.convert( 'pink', 'rgba' ); // 'rgba(255,192,203,1)'
 
 ### Built-in Support
 
+All standard CSS/SVG colors formats are supported.
+
 | Format      | Parsing | Stringifying | Identifiers               |
 |-------------|:-------:|:------------:|---------------------------|
 | #ABC        | ✔       | ✔            | `hex3`, `hexa3`           |
@@ -74,11 +77,15 @@ Pheasant.convert( 'pink', 'rgba' ); // 'rgba(255,192,203,1)'
 | color names | ✔       | ✔            | `colorName`, `colourName` |
 | hsl()       | ✔       | ✔            | `hsl`                     |
 | hsla()      | ✔       | ✔            | `hsla`                    |
-| rgb()       | ✔       | ✔            | `rgb`                     |
-| rgba()      | ✔       | ✔            | `rgba`                    |
+| rgb()*      | ✔       | ✔            | `rgb`                     |
+| rgba()*     | ✔       | ✔            | `rgba`                    |
 
 
 Format identifiers are case-insensitive.
+
+(*): The `rgb()` and `rgba()` formats also support percentages values, like
+`rgb(20%, 10%, 45%)` and `rgba(35%, 0%, 100%, 0.2)`. If you want to force
+percentages in the output, append `%` to each identifier: `rgb%` and `rgba%`.
 
 ### Setting the default output format
 
@@ -112,6 +119,9 @@ argument, an object with the following properties:
 - `normalize`: Optional. If set to `false`, the parsed string won’t be
   normalized before being passed to your `.parse` function (the normalizing
   process force the string to lowercase and remove trailing spaces).
+- `test`: Optional. If it’s a function, it’ll be used to test whether a string
+  is valid in this format or not. If it’s a regex, its `.test` method will be
+  used.
 
 The object must provide the `parse` and/or `stringify` attributes, and must
 provide the `name` attribute.

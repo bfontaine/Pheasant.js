@@ -939,6 +939,64 @@ describe( '.addFormat', function() {
     
     });
 
+    it( 'should use the .test attribute if it\'s a function', function ( done ) {
+
+        var ref = 's',
+            f = {
+            name: 'f',
+            test: function( s ) { expect( s ).to.equal( ref );
+                                  done(); },
+            parse: noop
+        };
+
+        Pheasant.addFormat( f );
+        Pheasant.parse( ref );
+
+    });
+
+    it( 'should use the .test attribute if it\'s a regex', function () {
+
+        var ref = 's',
+            re  = /foo/,
+            f = {
+            test: re,
+            parse: noop
+        };
+
+        re.test = function( s ) { expect( s ).to.equal( ref ); return true; };
+
+        Pheasant.parse( ref );
+
+    });
+
+    it( 'should not use the .parse function '
+      + 'if .test is a function which return false', function() {
+
+        var f = {
+            name: 'f',
+            test: function() { return false; },
+            parse: function() { expect( true ).to.be.false; }
+        };
+
+        Pheasant.addFormat( f );
+        Pheasant.parse( 's' );
+
+    });
+
+    it( 'should not use the .parse function '
+      + 'if .test is a regex which don\'t match the given string', function() {
+
+        var f = {
+            name: 'f',
+            test: /t/,
+            parse: function() { expect( true ).to.be.false; }
+        };
+
+        Pheasant.addFormat( f );
+        Pheasant.parse( 's' );
+
+    });
+
 });
 
 describe( '.convert', function() {

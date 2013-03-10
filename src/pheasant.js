@@ -215,12 +215,20 @@
      **/
     Pheasant.parse = function parse( s ) {
 
-        var val, fmt, parser;
+        var val, id, fmt, parser;
 
-        for ( fmt in Pheasant.formats ) {
-            if ( !Pheasant.formats.hasOwnProperty( fmt ) ) { continue; }
+        for ( id in Pheasant.formats ) {
+            if ( !Pheasant.formats.hasOwnProperty( id ) ) { continue; }
 
-            parser = Pheasant.formats[ fmt ].parse;
+            fmt = Pheasant.formats[ id ];
+
+            if ( typeof fmt.test === 'function' && !fmt.test( s ) ) {
+
+                continue;
+
+            }
+
+            parser = fmt.parse;
 
             if ( typeof parser === 'function' && (val = parser( s ) )) { 
 
@@ -273,10 +281,14 @@
      *  - normalize [Boolean]: optional, default to `true`. If set to
      *    false, the parsed string is not normalized, i.e. the case and
      *    trailing spaces are preserved.
+     *  - test [Function]: optional. If defined, it's used to test if a string
+     *    is valid in this format. The function takes a string and return a
+     *    boolean.
      **/
     Pheasant.addFormat = function addFormat( fmt ) {
 
-        var obj, i, len, name, names, registered_names, p;
+        var obj, i, len, name, names, registered_names, p,
+            test, t;
 
         if (   !fmt || !fmt.name
             || (!fmt.parse && !fmt.stringify)
@@ -286,8 +298,19 @@
 
         }
 
+        // function
+        if ( typeof fmt.test === 'function' ) { test = fmt.test; }
+
+        // regex
+        else if ( fmt.test && typeof fmt.test.test === 'function' ) {
+
+            test = fmt.test.test.bind( fmt.test );
+
+        }
+
         obj = {
             parse: function( s ) {
+
                 var color = fmt.parse( s ), alpha;
 
                 if ( !color ) { return null; }
@@ -316,7 +339,9 @@
                 );
 
             },
-            stringify: fmt.stringify
+            stringify: fmt.stringify,
+
+            test: test
         };
 
         if ( fmt.normalize !== false ) {
@@ -324,6 +349,13 @@
             p = obj.parse;
 
             obj.parse = function( s ) { return p( normalizeString( s ) ); }
+
+            if ( obj.test ) {
+
+                t = obj.test;
+                obj.test  = function( s ) { return t( normalizeString( s ) ); }
+
+            }
 
         }
 
@@ -532,6 +564,11 @@
         
         return {
             name: [ 'colorName', 'colourName' ],
+            test: function( s ) {
+
+                return cssColorsNames.hasOwnProperty( s );
+
+            },
             parse: function( s ) {
 
                 if ( cssColorsNames.hasOwnProperty(s) ) {
@@ -574,6 +611,7 @@
 
         return {
             name: [ 'hex3', 'hexa3' ],
+            test: re_hex3,
             parse: function parseHex3( s ) {
                 var vals;
 
@@ -611,6 +649,7 @@
 
         return {
             name: [ 'hex6', 'hexa6' ],
+            test: re_hex6,
             parse: function parseHex6( s ) {
                 var vals;
 
@@ -648,6 +687,7 @@
 
         return {
             name: 'rgb',
+            test: re_rgb_int,
             parse: function parseRGB( s ) {
                 var vals;
 
@@ -685,6 +725,7 @@
 
         return {
             name: 'rgb%',
+            test: re_rgb_perc,
             parse: function parseRGBPerc( s ) {
                 var vals;
 
@@ -726,6 +767,7 @@
 
         return {
             name: 'rgba',
+            test: re_rgba_int,
             parse: function parseRGBA( s ) {
                 var vals;
 
@@ -769,6 +811,7 @@
 
         return {
             name: 'rgba%',
+            test: re_rgba_perc,
             parse: function parseRGBAPerc( s ) {
                 var vals;
 
@@ -814,6 +857,7 @@
 
         return {
             name: 'hsl',
+            test: re_hsl,
             parse: function parseHSL( s ) {
 
                 var vals;
@@ -860,6 +904,7 @@
 
         return {
             name: 'hsla',
+            test: re_hsla,
             parse: function parseHSLa( s ) {
 
                 var vals, rgb;
