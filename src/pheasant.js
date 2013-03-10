@@ -410,7 +410,7 @@
          * Legal CSS colors names
          * http://www.w3.org/TR/2010/PR-css3-color-20101028/#svg-color
          **/
-        var cssColorsNames = {
+        var names = {
             aliceblue            : [ 240 , 248 , 255 , 1 ],
             antiquewhite         : [ 250 , 235 , 215 , 1 ],
             aqua                 : [ 0   , 255 , 255 , 1 ],
@@ -559,6 +559,7 @@
             yellow               : [ 255 , 255 , 0   , 1 ],
             yellowgreen          : [ 154 , 205 , 50  , 1 ],
 
+            // bonus
             transparent          : [ 0   , 0   , 0   , 0 ]
         };
         
@@ -566,18 +567,12 @@
             name: [ 'colorName', 'colourName' ],
             test: function( s ) {
 
-                return cssColorsNames.hasOwnProperty( s );
+                return names.hasOwnProperty( s );
 
             },
             parse: function( s ) {
 
-                if ( cssColorsNames.hasOwnProperty(s) ) {
-
-                    return cssColorsNames[s];
-
-                }
-
-                return null;
+                return names.hasOwnProperty(s) ? names[ s ] : null;
 
             },
             stringify: function( c ) {
@@ -586,10 +581,10 @@
 
                 var myVals = c.getRGBA().map(round).join( ',' ), name;
 
-                for ( name in cssColorsNames ) {
-                    if (!cssColorsNames.hasOwnProperty( name ) ) { continue; }
+                for ( name in names ) {
+                    if (!names.hasOwnProperty( name ) ) { continue; }
 
-                    if ( myVals === cssColorsNames[ name ].join( ',' ) ) {
+                    if ( myVals === names[ name ].join( ',' ) ) {
                         return name;
                     }
 
