@@ -134,7 +134,12 @@
         /**
          * Valid range types. See: Pheasant#range.
          **/
-        rangeTypes = [ 'string', 'object', 'rgb', 'rgba' ],
+        rangeTypes = {
+            string : function( c, f ) { return c.toString( f ); },
+            object : function( c ) { return c; },
+            rgb    : function( c ) { return c.getRGB(); },
+            rgba   : function( c ) { return c.getRGBA(); }
+        },
 
         /**
          * (helper) Compare two colors, and return the differences between
@@ -492,8 +497,7 @@
      **/
     Pheasant.range = function colorRange( opts ) {
 
-        var colorFrom, colorTo, len, type, format, diff,
-            _type, i, l, f1, f2;
+        var colorFrom, colorTo, type, format, diff, len, f1, f2;
 
         if ( !opts || !opts.from || !opts.to || opts.length <= 0 ) {
 
@@ -537,23 +541,9 @@
         if ( typeof opts.type === 'undefined' ) { type = 'string'; }
         else {
 
-            _type = normalizeString( opts.type );
+            type = normalizeString( opts.type );
 
-            for (i = 0, l = rangeTypes.length; i < l; i++) {
-
-                if ( _type === rangeTypes[ i ] ) {
-
-                    type = _type;
-                    break;
-
-                }
-
-            }
-
-            if ( !type ) { return []; }
-
-            // GC
-            _type = undefined;
+            if (!( type in rangeTypes )) { return []; }
 
         }
 
@@ -572,25 +562,9 @@
 
         diff = cmpColors( colorFrom, colorTo );
 
-        var rangeVal;
+        var rangeVal = rangeTypes[ type ],
 
-        switch( type ) {
-
-            case 'rgb': rangeVal = function( c ) {
-                return c.getRGB(); }; break;
-            
-            case 'rgba': rangeVal = function( c ) {
-                return c.getRGBA(); }; break;
-            
-            case 'object': rangeVal = function( c ) {
-                return c; }; break;
-            
-            case 'string': rangeVal = function( c ) {
-                return c.toString( format ); }; break;
-
-        }
-
-        var rgbaFrom  = colorFrom.getRGBA(),
+            rgbaFrom  = colorFrom.getRGBA(),
             rgba      = rgbaFrom,
             rgbaTo    = colorTo.getRGBA(),
 
@@ -609,10 +583,11 @@
 
             };
 
-
         for( i = 0; i < len; step(), i++) {
 
-            range.push( rangeVal( Pheasant.Color.apply( null, rgba ) ) );
+            range.push(
+                rangeVal( Pheasant.Color.apply( null, rgba ), format )
+            );
 
         }
 
