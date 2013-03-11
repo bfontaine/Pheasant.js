@@ -568,52 +568,47 @@
 
         diff = cmpColors( colorFrom, colorTo );
 
-        var exp;
+        var rangeVal;
 
         switch( type ) {
 
-            case 'rgb': exp = function( c ) {
+            case 'rgb': rangeVal = function( c ) {
                 return c.getRGB(); }; break;
             
-            case 'rgba': exp = function( c ) {
+            case 'rgba': rangeVal = function( c ) {
                 return c.getRGBA(); }; break;
             
-            case 'object': exp = function( c ) {
+            case 'object': rangeVal = function( c ) {
                 return c; }; break;
             
-            case 'string': exp = function( c ) {
+            case 'string': rangeVal = function( c ) {
                 return c.toString( format ); }; break;
 
         }
 
-        var red    = colorFrom.red,
-            green  = colorFrom.green,
-            blue   = colorFrom.blue,
-            alpha  = colorFrom.alpha,
-            r_step = diff[ 0 ] / len,
-            g_step = diff[ 1 ] / len,
-            b_step = diff[ 2 ] / len,
-            a_step = diff[ 3 ] / len,
+        var rgbaFrom  = colorFrom.getRGBA(),
+            rgba      = rgbaFrom,
+            rgbaTo    = colorTo.getRGBA(),
+
+            rgbaSteps = diff.map(function( n ) { return n / len; }),
             
-            range = [], i = 0;
+            range = [], i,
 
-        // FIXME this may not work if colorTo is lighter than colorFrom
-        for(; red   <= colorTo.red,
-              green <= colorTo.green,
-              blue  <= colorTo.blue,
-              alpha <= colorTo.alpha,
-              i < len;
-              red   += r_step,
-              green += g_step,
-              blue  += b_step,
-              alpha += a_step,
-              i++ ) {
+            // used as the for's step
+            step = function() {
 
-            range.push( exp( new Pheasant.Color(
+                for ( var i = 0; i < 4; i++ ) {
 
-                red, green, blue, alpha
+                    rgba[ i ] += rgbaSteps[ i ];
 
-            )));
+                }
+
+            };
+
+
+        for( i = 0; i < len; step(), i++) {
+
+            range.push( rangeVal( Pheasant.Color.apply( null, rgba ) ) );
 
         }
 
