@@ -245,6 +245,55 @@ object:
 Pheasant.formats = {};
 ```
 
+### Example
+
+Say you want to add a custom color format, which represent colors like that:
+`custom:<blue>/<red>/<green>`. It doesn’t support the alpha channel, and
+blue/red/green values are integer between 0 and 255. Here is how you can add
+this format:
+
+```js
+Pheasant.addFormat((function() {
+
+    // this regex match your format
+    var custom_re = /custom:(\d{1,3})\/(\d{1,3})\/(\d{1,3})/;
+
+    return {
+
+        name: 'custom', // the name
+        test: custom_re, // this is used to test if a string is valid in your format
+        parse: function( s ) {
+            // parse the string
+
+            custom_re.lastIndex = 0;
+
+            var brg = custom_re.exec( s );
+
+            return { blue: +brg[1], red: +brg[2], green: +brg[3] };
+
+        },
+
+        stringify: function( c ) {
+            // stringify a Color object
+
+            return 'custom:' + c.blue + '/' + c.red + '/' + c.green;
+
+        }
+
+    };
+
+})());
+```
+
+You can now try your format:
+
+```js
+Pheasant.guessFormat( 'custom:42/18/255' ); // 'custom'
+Pheasant.parse( 'custom:1/2/3' ).getRGB(); // [ 2, 3, 1 ]
+Pheasant.convert( '#ABC', 'custom' ); // "custom:204/170/187"
+```
+
+
 ## Tests
 
 Clone this repo, and then run `make`. You need to install Mocha before:
