@@ -489,7 +489,7 @@
     Pheasant.range = function colorRange( opts ) {
 
         var colorFrom, colorTo, len, type, format, diff,
-            _type, _fmt, i, l;
+            _type, i, l, f1, f2;
 
         if ( !opts || !opts.from || !opts.to || opts.length <= 0 ) {
 
@@ -498,7 +498,6 @@
         }
 
         // defaults
-        type = 'string';
         format = defaultStringFormat;
 
         // length
@@ -509,6 +508,7 @@
 
             colorFrom = Pheasant.parse( opts.from );
             if ( !colorFrom ) { return []; }
+            f1 = Pheasant.guessFormat( opts.from );
 
         } else if ( opts.from.getRGBA ) {
 
@@ -521,6 +521,7 @@
 
             colorTo = Pheasant.parse( opts.to );
             if ( !colorTo ) { return []; }
+            f2 = Pheasant.guessFormat( opts.to );
 
         } else if ( opts.to.getRGBA ) {
 
@@ -545,7 +546,7 @@
 
             }
 
-            if ( type === undefined ) { return []; }
+            if ( !type ) { return []; }
 
             // GC
             _type = undefined;
@@ -555,20 +556,68 @@
         // format
         if ( opts.format ) {
 
-            _format = normalizeString( opts.format );
+            format = normalizeString( opts.format );
 
-            if (!( _fmt in Pheasant.formats )) { return null; }
+            if (!( format in Pheasant.formats )) { return []; }
 
-            format = _fmt;
+        } else if ( f1 && f1 === f2 ) {
 
-            // GC
-            _fmt = undefined;
+            format = f1;
 
-        }
+        } else { format = defaultStringFormat; }
 
         diff = cmpColors( colorFrom, colorTo );
 
-        // TODO
+        var exp;
+
+        switch( type ) {
+
+            case 'rgb': exp = function( c ) {
+                return c.getRGB(); }; break;
+            
+            case 'rgba': exp = function( c ) {
+                return c.getRGBA(); }; break;
+            
+            case 'object': exp = function( c ) {
+                return c; }; break;
+            
+            case 'string': exp = function( c ) {
+                return c.toString( format ); }; break;
+
+        }
+
+        var red    = colorFrom.red,
+            green  = colorFrom.green,
+            blue   = colorFrom.blue,
+            alpha  = colorFrom.alpha,
+            r_step = diff[ 0 ] / len,
+            g_step = diff[ 1 ] / len,
+            b_step = diff[ 2 ] / len,
+            a_step = diff[ 3 ] / len,
+            
+            range = [], i = 0;
+
+        // FIXME this may not work if colorTo is lighter than colorFrom
+        for(; red   <= colorTo.red,
+              green <= colorTo.green,
+              blue  <= colorTo.blue,
+              alpha <= colorTo.alpha,
+              i < len;
+              red   += r_step,
+              green += g_step,
+              blue  += b_step,
+              alpha += a_step,
+              i++ ) {
+
+            range.push( exp( new Pheasant.Color(
+
+                red, green, blue, alpha
+
+            )));
+
+        }
+
+        return range;
 
     };
 

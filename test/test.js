@@ -1042,19 +1042,124 @@ describe( '.range', function() {
 
     });
        
+    it( 'should return an empty array if its object\'s length is zero', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff', length:0 }) ).to.deep.equal( [] );
+
+    });
+       
     it( 'should return an empty array if `from` is not a string nor a Color object', function() {
 
-        expect( Pheasant.range({ from: 42, to: '#fff', length:-1 }) ).to.deep.equal( [] );
-        expect( Pheasant.range({ from: {}, to: '#fff', length:-1 }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: 42, to: '#fff' }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: {}, to: '#fff' }) ).to.deep.equal( [] );
 
     });
        
     it( 'should return an empty array if `to` is not a string nor a Color object', function() {
 
-        expect( Pheasant.range({ from: '#fff', to: 42, length:-1 }) ).to.deep.equal( [] );
-        expect( Pheasant.range({ from: '#fff', to: {}, length:-1 }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: '#fff', to: 42 }) ).to.deep.equal( [] );
+        expect( Pheasant.range({ from: '#fff', to: {} }) ).to.deep.equal( [] );
 
     });
+
+    it( 'should default the length to 100', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#000' }).length ).to.equal( 100 );
+
+    });
+
+    it( 'should use the `length` attribute for the size of the range', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#000', length: 5 }).length ).to.equal( 5 );
+        expect( Pheasant.range({ from: '#fff', to: '#ffe', length: 5 }).length ).to.equal( 5 );
+        expect( Pheasant.range({ from: '#fff', to: '#fff', length: 5 }).length ).to.equal( 5 );
+
+    });
+
+    it( 'should accept Pheasant.Color objects for from/to attributes', function() {
+
+        var c1 = new Pheasant.Color( 42, 13, 243, 0.2 ),
+            c2 = new Pheasant.Color( 65, 5, 231, 0.8 );
+
+        expect( Pheasant.range({ from: c1, to: '#000' }) ).not.to.be.null;
+        expect( Pheasant.range({ from: '#000', to: c2 }) ).not.to.be.null;
+        expect( Pheasant.range({ from: c1, to: c2 }) ).not.to.be.null;
+
+    });
+
+    it( 'should use the default format if the format is unspecified', function() {
+
+        var r;
+
+        Pheasant.setDefaultStringFormat( 'hex3' );
+
+        r = Pheasant.range({ from: '#fff', to: 'rgb(12,12,12)', length: 5 });
+
+        expect( Pheasant.guessFormat( r[ 0 ] ) ).to.equal( 'hex3' );
+
+    });
+
+    it( 'should use the format of both from/to strings if they are the same', function() {
+
+        var r;
+
+        r = Pheasant.range({ from: '#fff', to: '#eee', length: 5 });
+        expect( Pheasant.guessFormat( r[ 0 ] ) ).to.equal( 'hex3' );
+
+        r = Pheasant.range({ from: '#abcdef', to: '#fbacbb', length: 5 });
+        expect( Pheasant.guessFormat( r[ 0 ] ) ).to.equal( 'hex6' );
+
+        r = Pheasant.range({ from: 'rgb(42,42,1)', to: 'rgb(42,42,2)', length: 5 });
+        expect( Pheasant.guessFormat( r[ 0 ] ) ).to.equal( 'rgb' );
+
+    });
+
+    it( 'should return an empty array if the given format is unsupported', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff', format: '&@$#' }) ).to.deep.equal( [] );
+
+    });
+
+    it( 'should return an empty array if the given type is not valid', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff', type: '&@$#' }) ).to.deep.equal( [] );
+
+    });
+
+    it( 'should return an array of Pheasant.Color object if the type is \'object\'', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff',
+                                 type: 'object', length: 2 })[0] ).to.respondTo( 'getRGB' );
+
+    });
+
+    it( 'should return an array of RGB arrays if the type is \'rgb\'', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff',
+                                 type: 'rgb', length: 2 })[0] ).to.deep.equal([ 255, 255, 255 ]);
+
+    });
+
+    it( 'should return an array of RGBA arrays if the type is \'rgba\'', function() {
+
+        expect( Pheasant.range({ from: '#fff', to: '#fff',
+                                 type: 'rgba', length: 2 })[0] ).to.deep.equal([ 255, 255, 255, 1 ]);
+
+    });
+
+    expect( Pheasant.range({
+        from: '#000',
+        to: '#000',
+        type: 'rgb',
+        length: 3
+    }) ).to.deep.equal([ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
+
+    expect( Pheasant.range({
+        from: '#010101',
+        to: '#000',
+        type: 'rgb',
+        length: 3
+    })[2] ).to.deep.equal([ 0, 0, 0 ]);
 
 });
 
