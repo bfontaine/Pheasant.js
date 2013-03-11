@@ -248,6 +248,28 @@
     };
 
     /**
+     * Test if the color is darker than an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.isDarkerThan = function( other ) {
+
+        var diff, sum;
+
+        if ( '' + other === other ) {
+
+            other = Pheasant.parse( other );
+
+        }
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        diff = cmpColors( this, other );
+        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
+
+        return sum > 0;
+
+    };
+
+    /**
      * Return a `Color` object using the given string, or `null` if it can't
      * be parsed.
      **/

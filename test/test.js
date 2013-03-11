@@ -1455,9 +1455,14 @@ describe( '.range', function() {
         var c1 = new Pheasant.Color( 42, 13, 243, 0.2 ),
             c2 = new Pheasant.Color( 65, 5, 231, 0.8 );
 
-        expect( Pheasant.range({ from: c1, to: '#000' }) ).not.to.be.null;
-        expect( Pheasant.range({ from: '#000', to: c2 }) ).not.to.be.null;
-        expect( Pheasant.range({ from: c1, to: c2 }) ).not.to.be.null;
+        expect( Pheasant.range({
+            from: c1, to: '#000', length: 5 }) ).not.to.be.null;
+        
+        expect( Pheasant.range({
+            from: '#000', to: c2, length: 5 }) ).not.to.be.null;
+        
+        expect( Pheasant.range({
+            from: c1, to: c2, length: 5 }) ).not.to.be.null;
 
     });
 
@@ -1669,6 +1674,57 @@ describe( 'Color objects', function() {
             expect( c2.alpha ).to.equal( c1.alpha );
 
         });
+
+    });
+
+    describe( '.isDarkerThan', function() {
+
+        it( 'should return `false` '
+          + 'if the other color is an invalid string', function() {
+
+            var c1 = new Pheasant.Color( 255, 255, 255 );
+
+            expect( c1.isDarkerThan( '&$*#' ) ).to.be.false;
+
+        });
+
+        it( 'should parse its argument if it\'s a string', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.isDarkerThan( '#fff' ) ).to.be.true;
+            expect( c1.isDarkerThan( '#abcdef' ) ).to.be.true;
+            expect( c1.isDarkerThan( 'rgba( 1, 1, 1, 1 )' ) ).to.be.true;
+            expect( c1.isDarkerThan( 'rgb( 0, 0, 0 )' ) ).to.be.false;
+
+        });
+
+        it( 'should return `false` if its argument is not a string '
+          + 'nor a Pheasant.Color object', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.isDarkerThan( null ) ).to.be.false;
+            expect( c1.isDarkerThan( undefined ) ).to.be.false;
+            expect( c1.isDarkerThan( 42 ) ).to.be.false;
+            expect( c1.isDarkerThan( [] ) ).to.be.false;
+            expect( c1.isDarkerThan( /foo/ ) ).to.be.false;
+
+        });
+
+        it( 'should return `false` '
+          + 'if the other color has the same R/G/B values', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 ),
+                c2 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.isDarkerThan( c2 ) ).to.be.false;
+
+        });
+
+        expect( Pheasant.parse( '#123' ).isDarkerThan( '#124' ) ).to.be.true;
+        expect( Pheasant.parse( '#123' ).isDarkerThan( '#123' ) ).to.be.false;
+        expect( Pheasant.parse( '#123' ).isDarkerThan( '#122' ) ).to.be.false;
 
     });
 
