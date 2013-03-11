@@ -299,8 +299,8 @@
      };
 
      /**
-      * Guess the string's color format. Return a lowercase string, or `null` if
-      * the format is not valid/supported.
+      * Guess the string's color format. Return a lowercase string, or `null`
+      * if the format is not valid/supported.
       **/
      Pheasant.guessFormat = function guessFormat( s ) {
 
@@ -422,7 +422,11 @@
             if ( obj.test ) {
 
                 t = obj.test;
-                obj.test  = function( s ) { return t( normalizeString( s ) ); }
+                obj.test  = function( s ) {
+                    
+                    return t( normalizeString( s ) );
+                
+                };
 
             }
 
@@ -906,7 +910,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_rgb_int = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/;
+        var re_rgb_int
+                = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/;
 
         return {
             name: 'rgb',
@@ -944,7 +949,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_rgb_perc = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
+        var re_rgb_perc
+                = /^rgb\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
 
         return {
             name: 'rgb%',
@@ -986,7 +992,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_rgba_int = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+)?)\s*\)$/;
+        var re_rgba_int
+                = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(1|0(?:\.\d+)?)\s*\)$/;
 
         return {
             name: 'rgba',
@@ -1030,7 +1037,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_rgba_perc = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+)?)\s*\)$/;
+        var re_rgba_perc
+                = /^rgba\(\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+)?)\s*\)$/;
 
         return {
             name: 'rgba%',
@@ -1076,7 +1084,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_hsl = /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
+        var re_hsl
+                = /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/;
 
         return {
             name: 'hsl',
@@ -1123,7 +1132,8 @@
      **/
     Pheasant.addFormat((function() {
 
-        var re_hsla = /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))?\s*\)$/;
+        var re_hsla
+                = /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(1|0(?:\.\d+))?\s*\)$/;
 
         return {
             name: 'hsla',
