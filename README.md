@@ -60,6 +60,56 @@ Pheasant.guessFormat( '#cccbbb' ); // 'hex6'
 Pheasant.guessFormat( '#cccb' ); // null
 ```
 
+
+### .range
+
+This function takes an object as its argument, and return a range of colors. The
+object must have the following properties:
+
+- `from`: The color to start the range with. It can be a valid color string, or a
+  `Pheasant.Color` object.
+- `to`: The color to end the range with. As `from`, it can be a valid color
+  string, or a `Pheasant.Color` object.
+
+Additionally, the object can have the following optional properties:
+
+- `length`: the length of the range (default to 100).
+- `type`: the type of the range values. It must be one of the following:
+    - `'string'` (default): Each value is a string describing the color. If you
+      provide a `format` attribute, it’ll be used. If it’s not provided and if the
+      two colors (`from` and `to`) both are strings of the same format, this is
+      the one which will be used. If none of theses conditions are met, the
+      default format will be used.
+    - `'object'`: Each value is a `Pheasant.Color` object.
+    - `'rgb'`: Each value is an array of three numbers, the red, green and blue
+      channels.
+    - `'rgba'`: Same as `'rgb'`, but with the alpha channel.
+- `format`: this attribute is used only if the `type` is not provided or is set
+  to `'string'`. It defines the format used for the colors strings.
+
+This function return an empty array if `from` and/or `to` are missing, and/or if the
+length is lesser or equal to zero, and/or if the `type` attribute is not valid, and/or
+the `format` attribute is not valid, and/or `from` (or `to`) is a string which
+cannot be parsed. Some values in the range may be null if you choose the
+`colorName` format, since some values don’t have a name (e.g. `rgba(1, 1, 1)`).
+
+```js
+// [ '#fff', '#fff', '#fff' ]
+Pheasant.range({ from: '#fff', to: '#fff', length: 3 });
+
+// ["#abc", "#89a", "#568", "#345", "#123"]
+Pheasant.range({ from: '#ABC', to: '#123', length: 5 });
+
+// ["#40bf40", "#3ca13c", "#378337", "#336633", "#2e482e", "#2a2a2a"]
+Pheasant.range({
+    from: 'hsl(120, 50%, 50%)',
+    to: 'rgb(42, 42, 42)',
+    length: 6,
+    format: 'hex6'
+});
+```
+
+
 ## Color objects
 
 You can create a `Color` object using the following constructor:

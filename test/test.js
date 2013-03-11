@@ -1161,6 +1161,12 @@ describe( '.range', function() {
         length: 3
     })[2] ).to.deep.equal([ 0, 0, 0 ]);
 
+    expect( Pheasant.range({
+        from: '#abc',
+        to: '#123',
+        length: 3
+    })[2] ).to.equal( '#123' );
+
 });
 
 describe( '.guessFormat', function() {

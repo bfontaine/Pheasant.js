@@ -590,7 +590,7 @@
             rgba      = rgbaFrom,
             rgbaTo    = colorTo.getRGBA(),
 
-            rgbaSteps = diff.map(function( n ) { return n / len; }),
+            rgbaSteps = diff.map(function( n ) { return n / ( len - 1 ); }),
             
             range = [], i,
 
