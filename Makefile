@@ -27,7 +27,7 @@ test-build: build test
 test-all: test test-client test-cov test-build
 
 build: src/pheasant.js
-	mkdir ${DESTDIR}
+	mkdir -p ${DESTDIR}
 	cp src/pheasant.js ${DESTDIR}/pheasant.js
 	uglifyjs src/pheasant.js > ${DESTDIR}/pheasant.min.js
 
