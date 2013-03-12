@@ -540,6 +540,27 @@ describe( 'Parsing', function() {
 
     });
 
+    it( 'should return null if the argument is not a string '
+      + 'nor a Pheasant.Color object', function() {
+
+        expect( Pheasant.parse( undefined ) ).to.be.null;
+        expect( Pheasant.parse( null ) ).to.be.null;
+        expect( Pheasant.parse( 42 ) ).to.be.null;
+        expect( Pheasant.parse( {} ) ).to.be.null;
+        expect( Pheasant.parse( [] ) ).to.be.null;
+        expect( Pheasant.parse( /foo/ ) ).to.be.null;
+
+    });
+
+    it( 'should return its argument '
+      + 'if it\'s a Pheasant.Color object', function() {
+
+        var c = new Pheasant.Color( 0, 1, 2, 3, 0.5 );
+
+        expect( Pheasant.parse( c ) ).to.deep.equal( c );
+
+    });
+
 });
 
 describe( 'Stringifying', function() {
@@ -1725,6 +1746,108 @@ describe( 'Color objects', function() {
         expect( Pheasant.parse( '#123' ).isDarkerThan( '#124' ) ).to.be.true;
         expect( Pheasant.parse( '#123' ).isDarkerThan( '#123' ) ).to.be.false;
         expect( Pheasant.parse( '#123' ).isDarkerThan( '#122' ) ).to.be.false;
+
+    });
+
+    describe( '.isLighterThan', function() {
+
+        it( 'should return `false` '
+          + 'if the other color is an invalid string', function() {
+
+            var c1 = new Pheasant.Color( 255, 255, 255 );
+
+            expect( c1.isLighterThan( '&$*#' ) ).to.be.false;
+
+        });
+
+        it( 'should parse its argument if it\'s a string', function() {
+
+            var c1 = new Pheasant.Color( 255, 255, 255 );
+
+            expect( c1.isLighterThan( '#fff' ) ).to.be.false;
+            expect( c1.isLighterThan( '#abcdef' ) ).to.be.true;
+            expect( c1.isLighterThan( 'rgba( 1, 1, 1, 1 )' ) ).to.be.true;
+            expect( c1.isLighterThan( 'rgb( 0, 0, 0 )' ) ).to.be.true;
+
+        });
+
+        it( 'should return `false` if its argument is not a string '
+          + 'nor a Pheasant.Color object', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.isLighterThan( null ) ).to.be.false;
+            expect( c1.isLighterThan( undefined ) ).to.be.false;
+            expect( c1.isLighterThan( 42 ) ).to.be.false;
+            expect( c1.isLighterThan( [] ) ).to.be.false;
+            expect( c1.isLighterThan( /foo/ ) ).to.be.false;
+
+        });
+
+        it( 'should return `false` '
+          + 'if the other color has the same R/G/B values', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 ),
+                c2 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.isLighterThan( c2 ) ).to.be.false;
+
+        });
+
+        expect( Pheasant.parse( '#123' ).isLighterThan( '#124' ) ).to.be.false;
+        expect( Pheasant.parse( '#123' ).isLighterThan( '#123' ) ).to.be.false;
+        expect( Pheasant.parse( '#123' ).isLighterThan( '#122' ) ).to.be.true;
+
+    });
+
+    describe( '.eq', function() {
+
+        it( 'should return `false` '
+          + 'if the other color is an invalid string', function() {
+
+            var c1 = new Pheasant.Color( 255, 255, 255 );
+
+            expect( c1.eq( '&$*#' ) ).to.be.false;
+
+        });
+
+        it( 'should parse its argument if it\'s a string', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.eq( '#000' ) ).to.be.true;
+            expect( c1.eq( '#abcdef' ) ).to.be.false;
+            expect( c1.eq( 'rgba( 1, 1, 1, 1 )' ) ).to.be.false;
+            expect( c1.eq( 'rgb( 0, 0, 0 )' ) ).to.be.true;
+
+        });
+
+        it( 'should return `false` if its argument is not a string '
+          + 'nor a Pheasant.Color object', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 );
+
+            expect( c1.eq( null ) ).to.be.false;
+            expect( c1.eq( undefined ) ).to.be.false;
+            expect( c1.eq( 42 ) ).to.be.false;
+            expect( c1.eq( [] ) ).to.be.false;
+            expect( c1.eq( /foo/ ) ).to.be.false;
+
+        });
+
+        it( 'should return `true` '
+          + 'if the other color has the same R/G/B/a values', function() {
+
+            var c1 = new Pheasant.Color( 42, 1, 0, 0.2 ),
+                c2 = new Pheasant.Color( 42, 1, 0, 0.2 );
+
+            expect( c1.eq( c2 ) ).to.be.true;
+
+        });
+
+        expect( Pheasant.parse( '#123' ).eq( '#124' ) ).to.be.false;
+        expect( Pheasant.parse( '#123' ).eq( '#123' ) ).to.be.true;
+        expect( Pheasant.parse( '#123' ).eq( '#122' ) ).to.be.false;
 
     });
 

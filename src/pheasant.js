@@ -270,12 +270,58 @@
     };
 
     /**
+     * Test if the color is the same as an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.eq = function( other ) {
+
+        var rgba1, rgba2, i;
+
+        other = Pheasant.parse( other );
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        rgba1 = this.getRGBA();
+        rgba2 = other.getRGBA();
+
+        for ( i = 0; i < 4; i++ ) {
+
+            if ( rgba1[ i ] !== rgba2[ i ] ) { return false; }
+
+        }
+
+        return true;
+
+    };
+
+    /**
+     * Test if the color is lighter than an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.isLighterThan = function( other ) {
+
+        var diff, sum;
+
+        other = Pheasant.parse( other );
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        diff = cmpColors( this, other );
+        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
+
+        return sum < 0;
+
+    };
+
+    /**
      * Return a `Color` object using the given string, or `null` if it can't
      * be parsed.
      **/
     Pheasant.parse = function parse( s ) {
 
         var val, id, fmt, parser;
+
+        if ( s && s.getRGBA ) { return s; }
+
+        if ( '' + s !== s ) { return null; } // not a string
 
         for ( id in Pheasant.formats ) {
             if ( !Pheasant.formats.hasOwnProperty( id ) ) { continue; }

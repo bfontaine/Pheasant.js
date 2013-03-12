@@ -160,6 +160,35 @@ c2.getRGB(); // [ 213, 213, 213 ]
 Pheasant.parse( 'white' ).negative().toString( 'colorName' ); // 'black'
 ```
 
+### .isDarkerThan
+
+This method test if the color is darker than another color. You can pass it a
+`Color` object or a string.
+
+```js
+Pheasant.parse( '#fff' ).isDarkerThan( '#eee' ); // false
+Pheasant.parse( 'red' ).isDarkerThan( '#FAFAFA' ); // true
+```
+
+### .isLighterThan
+
+This method test if the color is lighter than another color. You can pass it a
+`Color` object or a string.
+
+```js
+Pheasant.parse( '#fff' ).isLighterThan( '#eee' ); // true
+Pheasant.parse( 'red' ).isLighterThan( '#FAFAFA' ); // false
+```
+
+### .eq
+
+This method test the equality between this color and another. You can pass it a
+`Color` object or a string.
+
+```js
+Pheasant.parse( '#000' ).eq( 'rgba( 0, 0, 0)' ); // true
+```
+
 ## Color Formats
 
 ### Built-in Support
