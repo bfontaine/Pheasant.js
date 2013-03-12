@@ -2,4 +2,6 @@
 .*.swp
 .*.swo
 /src-cov
+/dist
+/node_modules
 coverage.html
