@@ -12,6 +12,12 @@
 npm install pheasant
 ```
 
+Then use:
+
+```js
+var Pheasant = require( 'pheasant' ).Pheasant;
+```
+
 ### Client-side
 
 Include the `build/pheasant.min.js` file in your page. There’s no dependency,
