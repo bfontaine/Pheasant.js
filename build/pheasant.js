@@ -233,86 +233,7 @@
     };
 
     /**
-     * Return a new Color object, representing the negative of the current
-     * color.
-     **/
-    Pheasant.Color.prototype.negative = function() {
-
-        return new Pheasant.Color(
-            255 - this.red,
-            255 - this.green,
-            255 - this.blue,
-            this.alpha
-        );
-
-    };
-
-    /**
-     * Test if the color is darker than an other one. Return a boolean.
-     **/
-    Pheasant.Color.prototype.isDarkerThan = function( other ) {
-
-        var diff, sum;
-
-        if ( '' + other === other ) {
-
-            other = Pheasant.parse( other );
-
-        }
-
-        if ( !other || !other.getRGBA ) { return false; }
-
-        diff = cmpColors( this, other );
-        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
-
-        return sum > 0;
-
-    };
-
-    /**
-     * Test if the color is the same as an other one. Return a boolean.
-     **/
-    Pheasant.Color.prototype.eq = function( other ) {
-
-        var rgba1, rgba2, i;
-
-        other = Pheasant.parse( other );
-
-        if ( !other || !other.getRGBA ) { return false; }
-
-        rgba1 = this.getRGBA();
-        rgba2 = other.getRGBA();
-
-        for ( i = 0; i < 4; i++ ) {
-
-            if ( rgba1[ i ] !== rgba2[ i ] ) { return false; }
-
-        }
-
-        return true;
-
-    };
-
-    /**
-     * Test if the color is lighter than an other one. Return a boolean.
-     **/
-    Pheasant.Color.prototype.isLighterThan = function( other ) {
-
-        var diff, sum;
-
-        other = Pheasant.parse( other );
-
-        if ( !other || !other.getRGBA ) { return false; }
-
-        diff = cmpColors( this, other );
-        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
-
-        return sum < 0;
-
-    };
-
-    /**
-     * Return a `Color` object using the given string, or `null` if it can't
+     * Return a 'Color' object using the given string, or 'null' if it can't
      * be parsed.
      **/
     Pheasant.parse = function parse( s ) {
@@ -372,7 +293,7 @@
      };
 
      /**
-      * Guess the string's color format. Return a lowercase string, or `null`
+      * Guess the string's color format. Return a lowercase string, or 'null'
       * if the format is not valid/supported.
       **/
      Pheasant.guessFormat = function guessFormat( s ) {
@@ -408,7 +329,7 @@
      *    non-already-bound name will be used for this format.
      *  - parse [Function]: a function which takes a string as its
      *    first argument, and returns an object or an array if it can parse
-     *    it, or `null` if it can't (e.g. wrong formatting). The object
+     *    it, or 'null' if it can't (e.g. wrong formatting). The object
      *    should have the following properties:
      *    - red [Number]: an integer between 0 and 255 (default: 0)
      *    - blue [Number]: an integer between 0 and 255 (default: 0)
@@ -416,11 +337,11 @@
      *    - alpha [Number]: a number between 0 and 1 (default: 1)
      *    The function can also return an array of 3 or 4 values, representing
      *    the red, blue, green (and optionally alpha) channels.
-     *  - stringify [Function]: reverse of `parse` ; a function which
+     *  - stringify [Function]: reverse of 'parse' ; a function which
      *    takes a Color object and return a formatted string. It may
-     *    return `null` if it’s not possible to stringify the color,
+     *    return 'null' if it's not possible to stringify the color,
      *    e.g. there's a NaN value somewhere.
-     *  - normalize [Boolean]: optional, default to `true`. If set to
+     *  - normalize [Boolean]: optional, default to 'true'. If set to
      *    false, the parsed string is not normalized, i.e. the case and
      *    trailing spaces are preserved.
      *  - test [Function]: optional. If defined, it's used to test if a string
@@ -540,7 +461,7 @@
      * - from [String]: what color is the range starting from. It must
      *   be a valid color in a supported format. You can also provide a
      *   Pheasant.Color object.
-     * - to [String]: what color is the range stopping at. See the `from`
+     * - to [String]: what color is the range stopping at. See the 'from'
      *   attribute.
      * - length [Number]: Optional (default to 100). The length of the range,
      *   i.e. the number of colors in it, including the starting and the
@@ -548,20 +469,20 @@
      * - type [String]: Optional (default to 'string'). The type of each
      *   value of the range. It must be one of the following:
      *   - 'string': each value is a string describing the color. If both
-     *   `from` and `to` are strings of the same format, it'll be used,
-     *   unless the `format` attribute is specified. If they're not in the
+     *   'from' and 'to' are strings of the same format, it'll be used,
+     *   unless the 'format' attribute is specified. If they're not in the
      *   same format or one of them is a Pheasant.Color object, the default
-     *   format will be used, unless the `format` attribute is specified.
+     *   format will be used, unless the 'format' attribute is specified.
      *   - 'object': each value is a Pheasant.Color object.
      *   - 'rgb': each value is an array of red, green and blue channels'
      *     values.
      *   - 'rgba': same as 'rgb', but with alpha channel.
      * - format [String]: Optional. If specified, it must be a valid format
-     *   name, which will be used for each color if the `type` attribute is
+     *   name, which will be used for each color if the 'type' attribute is
      *   not specified or set to 'string'.
      * This function returns an array, which may be empty if one of the
      * mandatory attributes is missing or a formatted string cannot be parsed,
-     * or the `length` attribute is less than 1.
+     * or the 'length' attribute is less than 1.
      **/
     Pheasant.range = function colorRange( opts ) {
 
@@ -666,15 +587,84 @@
     // export
     ctx.Pheasant = Pheasant;
 
-    /****************************************************************
-     * Registering formats                                          *
-     ****************************************************************/
+    /**
+     * Return a new Color object, representing the negative of the current
+     * color.
+     **/
+    Pheasant.Color.prototype.negative = function() {
 
-    /*
-        Check Pheasant#addFormat to see how to add a new format. Most
-        of the calls below use an IIFE as a closure to cache some
-        useful stuff (e.g. regexes).
-    */
+        return new Pheasant.Color(
+            255 - this.red,
+            255 - this.green,
+            255 - this.blue,
+            this.alpha
+        );
+
+    };
+
+    /**
+     * Test if the color is darker than an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.isDarkerThan = function( other ) {
+
+        var diff, sum;
+
+        if ( '' + other === other ) {
+
+            other = Pheasant.parse( other );
+
+        }
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        diff = cmpColors( this, other );
+        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
+
+        return sum > 0;
+
+    };
+
+    /**
+     * Test if the color is the same as an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.eq = function( other ) {
+
+        var rgba1, rgba2, i;
+
+        other = Pheasant.parse( other );
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        rgba1 = this.getRGBA();
+        rgba2 = other.getRGBA();
+
+        for ( i = 0; i < 4; i++ ) {
+
+            if ( rgba1[ i ] !== rgba2[ i ] ) { return false; }
+
+        }
+
+        return true;
+
+    };
+
+    /**
+     * Test if the color is lighter than an other one. Return a boolean.
+     **/
+    Pheasant.Color.prototype.isLighterThan = function( other ) {
+
+        var diff, sum;
+
+        other = Pheasant.parse( other );
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        diff = cmpColors( this, other );
+        sum  = diff[ 0 ] + diff[ 1 ] + diff[ 2 ];
+
+        return sum < 0;
+
+    };
 
     /**
      * CSS/SVG color names, e.g. 'white', 'blue', 'lime', etc.
@@ -871,6 +861,7 @@
         };
 
     })());
+
 
     /**
      * Hex3, e.g. #XYZ.
