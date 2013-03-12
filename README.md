@@ -353,6 +353,13 @@ See the LICENSE file (MIT).
 
 ## Changes
 
+### v0.2.0 (12/03/2013)
+
+- `Pheasant#range`
+- `Color#isLighterThan`, `Color#isDarkerThan`, `Color#eq`
+- Minified version added
+- Better doc
+
 ### v0.1.1 (10/03/2013)
 
 - `Color#negative` (#3)
