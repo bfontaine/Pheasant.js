@@ -14,8 +14,8 @@ npm install pheasant
 
 ### Client-side
 
-Include the `src/pheasant.js` file. There is no available minified version
-for the moment; you have to make your own.
+Include the `build/pheasant.min.js` file in your page. There’s no dependency,
+only 15ko of pure JavaScript (4.3ko gzip’d).
 
 
 ## Usage

@@ -1,8 +1,10 @@
 // for tests on Node only
 if ( typeof window === 'undefined' ) {
 
-    var src      = process.env.PHEASANT_COV ? 'src-cov' : 'src',
-        Pheasant = require( __dirname + '/../' + src + '/pheasant' ).Pheasant
+    var build    = process.env.PHEASANT_COV ? 'build-cov' : 'build',
+        suffix   = process.env.PHEASANT_MIN ? '.min.js' : '',
+        Pheasant = require( __dirname + '/../'
+                                + build + '/pheasant' + suffix ).Pheasant
         chai     = require( 'chai' );
 
 }
