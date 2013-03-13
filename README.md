@@ -328,24 +328,29 @@ Pheasant.parse( 'custom:1/2/3' ).getRGB(); // [ 2, 3, 1 ]
 Pheasant.convert( '#ABC', 'custom' ); // "custom:204/170/187"
 ```
 
-
 ## Tests
 
-Clone this repo, and then run `make`. You need to install Mocha before:
+Clone this repo, and then run `make test-all`:
 
 ```sh
-[sudo] npm install -g mocha
 git clone https://github.com/bfontaine/Pheasant.js.git
 cd Pheasant
 make
 ```
 
-To test on client-side, type `make test-client`. It should display a file URL,
-open it in your favorite browser (it’s the `test/client.html` file). We can’t
-use PhantomJS, because it [doesn’t][phantomjs-no-bind] have the
-`Function.prototype.bind` function.
+You have to install the dependencies if they’re not already installed:
 
-[phantomjs-no-bind]: https://code.google.com/p/phantomjs/issues/detail?id=522
+```sh
+npm -g install mocha chai uglify-js mocha-phantomjs
+# install Node-JSCoverage
+git clone https://github.com/visionmedia/node-jscoverage.git
+cd node-jscoverage
+./configure && make && make install
+```
+
+You also need [PhantomJS][phantomjs].
+
+[phantomljs]: http://phantomjs.org/download.html
 
 ## License
 
