@@ -350,7 +350,7 @@ cd node-jscoverage
 
 You also need [PhantomJS][phantomjs].
 
-[phantomljs]: http://phantomjs.org/download.html
+[phantomjs]: http://phantomjs.org/download.html
 
 ## License
 
