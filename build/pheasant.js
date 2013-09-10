@@ -1,11 +1,21 @@
-;(function(ctx, undefined) {
+(function( root, factory ) {
+
+    if (typeof define == 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports == 'object') {
+        module.exports = factory();
+    } else {
+        root.Pheasant = factory();
+    }
+
+})(this, function() {
 
     'use strict'
 
         /**
          * Main object
          **/
-    var Pheasant = ctx.Pheasant || {},
+    var Pheasant = {},
 
         /**
          * Default String format. Used for toString().
@@ -13,7 +23,7 @@
         defaultStringFormat = 'hex6',
 
         /**
-         * (Helper) Normalize a string (lower-case and trim)
+         * (helper) Normalize a string (lower-case and trim)
          **/
         normalizeString = function( s ) {
 
@@ -663,9 +673,6 @@
 
     };
 
-    // export
-    ctx.Pheasant = Pheasant;
-
     /****************************************************************
      * Registering formats                                          *
      ****************************************************************/
@@ -1225,4 +1232,11 @@
 
     })());
 
-})( typeof module === 'object' ? module.exports : this );
+    // used for people that require the module as
+    //  var Pheasant = require('pheasant').Pheasant;
+    // instead of
+    //  var Pheasant = require('pheasant');
+    Pheasant.Pheasant = Pheasant;
+
+    return Pheasant;
+});
