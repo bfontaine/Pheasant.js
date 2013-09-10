@@ -15,13 +15,14 @@ npm install pheasant
 Then use:
 
 ```js
-var Pheasant = require( 'pheasant' ).Pheasant;
+var Pheasant = require( 'pheasant' );
 ```
 
 ### Client-side
 
 Include the `build/pheasant.min.js` file in your page. There’s no dependency,
-only 15ko of pure JavaScript (4.3ko gzip’d).
+only 15ko of pure JavaScript (4.3ko gzip’d). Pheasant can also be used as an AMD
+module.
 
 
 ## Usage
@@ -356,7 +357,14 @@ You also need [PhantomJS][phantomjs].
 
 See the LICENSE file (MIT).
 
-## Changes
+## Changelog
+
+### v0.2.1 (10/09/2013)
+
+- AMD support (#6)
+- On Node, `Pheasant` is now returned as the module itself (i.e.
+  `require('pheasant')`, not `require('pheasant').Pheasant`), but the old method
+  is still supported for backward compatibility.
 
 ### v0.2.0 (12/03/2013)
 

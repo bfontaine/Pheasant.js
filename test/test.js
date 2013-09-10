@@ -4,7 +4,7 @@ if ( typeof window === 'undefined' ) {
     var build    = process.env.PHEASANT_COV ? 'build-cov' : 'build',
         suffix   = process.env.PHEASANT_MIN ? '.min.js' : '',
         Pheasant = require( __dirname + '/../'
-                                + build + '/pheasant' + suffix ).Pheasant
+                                + build + '/pheasant' + suffix ),
         chai     = require( 'chai' );
 
 }
