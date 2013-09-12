@@ -24,6 +24,21 @@ Include the `build/pheasant.min.js` file in your page. There’s no dependency,
 only 15ko of pure JavaScript (4.3ko gzip’d). Pheasant can also be used as an AMD
 module.
 
+#### Browser support
+
+|--------------------|:----------------------------------:|
+| Chrome             | 28+ (not tested on older versions) |
+| IE                 | not tested                         |
+| Safari             | 6+ (not tested on older versions)  |
+| Opera              | 16+ (not tested on older versions) |
+| Firefox            | 18+ (not tested on older versions) |
+<!--
+| iOS Safari         | not tested |
+| Opera Mini         | not tested |
+| Android Browser    | not tested |
+| IE Mobile          | not tested |
+| Blackberry Browser | not tested |
+-->
 
 ## Usage
 
