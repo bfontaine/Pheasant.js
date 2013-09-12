@@ -27,11 +27,11 @@ module.
 
 ## Usage
 
-Pheasant expose one object, `Pheasant`. It has the following methods:
+Pheasant exposes one object, `Pheasant`. It has the following methods:
 
 ### .parse
 
-This function return a `Pheasant.Color` object of the parsed string, or null if it
+This function returns a `Pheasant.Color` object of the parsed string, or null if it
 can’t be parsed (see the support table below for the supported formats).
 
 ```js
@@ -94,7 +94,7 @@ Additionally, the object can have the following optional properties:
 - `format`: this attribute is used only if the `type` is not provided or is set
   to `'string'`. It defines the format used for the colors strings.
 
-This function return an empty array if `from` and/or `to` are missing, and/or if the
+This function returns an empty array if `from` and/or `to` are missing, and/or if the
 length is lesser or equal to zero, and/or if the `type` attribute is not valid, and/or
 the `format` attribute is not valid, and/or `from` (or `to`) is a string which
 cannot be parsed. Some values in the range may be null if you choose the
@@ -169,7 +169,7 @@ Pheasant.parse( 'white' ).negative().toString( 'colorName' ); // 'black'
 
 ### .brightness
 
-This method return the [brightness index][brightness] of the color. This is an
+This method returns the [brightness index][brightness] of the color. This is an
 integer between 0 (dark) and 255 (white). It can be used to mesure the contrast
 between two colors.
 
@@ -182,7 +182,7 @@ Pheasant.parse('rgb(42, 10, 134)').brightness(); // 34
 
 ### .isDarkerThan
 
-This method test if the color is darker than another color. You can pass it a
+This method tests if the color is darker than another color. You can pass it a
 `Color` object or a string.
 
 ```js
@@ -192,7 +192,7 @@ Pheasant.parse( 'red' ).isDarkerThan( '#FAFAFA' ); // true
 
 ### .isLighterThan
 
-This method test if the color is lighter than another color. You can pass it a
+This method tests if the color is lighter than another color. You can pass it a
 `Color` object or a string.
 
 ```js
@@ -202,22 +202,29 @@ Pheasant.parse( 'red' ).isLighterThan( '#FAFAFA' ); // false
 
 ### .eq
 
-This method test the equality between this color and another. You can pass it a
+This method tests the equality between this color and another. You can pass it a
 `Color` object or a string.
 
 ```js
 Pheasant.parse( '#000' ).eq( 'rgba( 0, 0, 0)' ); // true
 ```
 
-### .hasSufficientBrightnessContrastWith
+### .brightnessContrast
 
-This method checks that two colors have a sufficient brightness contrast (i.e.
-their brightness indexes are different by at least 125 points).
+This method returns the brightness contrast between the current color and
+another. It’s an integer between 0 and 255.
 
 ```js
-Pheasant.parse('blue').hasSufficientBrightnessContrastWith('yellow') // true
-Pheasant.parse('blue').hasSufficientBrightnessContrastWith('darkblue'); // false
+Pheasant.parse('blue').brightnessContrast('yellow') // true
+Pheasant.parse('blue').brightnessContrast('darkblue'); // false
 ```
+
+### .hueContrast
+
+This method returns the hue contrast between the current color and another. It’s
+an integer between 0 and 765. For the best readability, the brightness contrast
+between the text color and the background color should be higher than 125, and
+the hue contrast higher than 500.
 
 ## Color Formats
 
@@ -359,7 +366,7 @@ Clone this repo, and then run `make test-all`:
 ```sh
 git clone https://github.com/bfontaine/Pheasant.js.git
 cd Pheasant
-make
+make test-all
 ```
 
 You have to install the dependencies if they’re not already installed:
@@ -384,7 +391,7 @@ See the LICENSE file (MIT).
 
 ### v0.2.2 (next version)
 
-- `Color#brightness`, `Color#hasSufficientBrightnessContrastWith`
+- `Color#brightness`, `Color#brightnessContrast`, `Color#hueContrast`
 
 ### v0.2.1 (10/09/2013)
 

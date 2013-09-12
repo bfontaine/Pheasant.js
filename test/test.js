@@ -1708,8 +1708,8 @@ describe( 'Color objects', function() {
         });
 
         it( 'should return 255 if the color is white', function() {
-            var black = new Pheasant.Color( 255, 255, 255 );
-            expect(black.brightness()).to.equal( 255 );
+            var white = new Pheasant.Color( 255, 255, 255 );
+            expect(white.brightness()).to.equal( 255 );
         });
 
         it( 'should return 38 if the color is dark brown', function() {
@@ -1877,68 +1877,76 @@ describe( 'Color objects', function() {
 
     });
 
-    describe( '.hasSufficientBrightnessContrastWith', function() {
+    describe( '.brightnessContrast', function() {
 
-        it( 'should return false if the given object is not a valid color', function() {
+        it( 'should return undefined if the given object is not a valid color', function() {
             var c = new Pheasant.Color( 25, 100, 123 );
 
-            expect( c.hasSufficientBrightnessContrastWith(null) ).to.be.false;
-            expect( c.hasSufficientBrightnessContrastWith('foobar') ).to.be.false;
-            expect( c.hasSufficientBrightnessContrastWith(function(){}) ).to.be.false;
+            expect( c.brightnessContrast(null) ).to.be.undefined;
+            expect( c.brightnessContrast('foobar') ).to.be.undefined;
+            expect( c.brightnessContrast(function(){}) ).to.be.undefined;
         });
 
-        it( 'should return false if the two colors are the same', function() {
+        it( 'should return 0 if the two colors are the same', function() {
             var c1 = new Pheasant.Color( 42, 35, 201 ),
                 c2 = new Pheasant.Color( 42, 35, 201 );
 
-            expect( c1.hasSufficientBrightnessContrastWith( c2 ) ).to.be.false;
+            expect( c1.brightnessContrast( c2 ) ).to.be.equal( 0 );
         });
 
-        it( 'should return true if the two colors are black & white', function() {
+        it( 'should return 255 if the two colors are black & white', function() {
             var b = new Pheasant.Color(   0,   0,   0 ),
                 w = new Pheasant.Color( 255, 255, 255 );
 
-            expect( b.hasSufficientBrightnessContrastWith( w ) ).to.be.true;
-            expect( w.hasSufficientBrightnessContrastWith( b ) ).to.be.true;
+            expect( b.brightnessContrast( w ) ).to.be.equal( 255 );
+            expect( w.brightnessContrast( b ) ).to.be.equal( 255 );
         });
 
-        it( 'should return true if the two colors have a brightness difference of >= 125', function() {
+        it( 'should accept colors as strings', function() {
             var darkbrown = new Pheasant.Color( 60, 30, 20 ),
-                lightblue = new Pheasant.Color( 180, 200, 255 );
+                lightblue = new Pheasant.Color( 'lightblue' );
 
-            expect( lightblue.hasSufficientBrightnessContrastWith( darkbrown ) ).to.be.true;
-            expect( darkbrown.hasSufficientBrightnessContrastWith( lightblue ) ).to.be.true;
-        });
-
-        it( 'should return false if the two colors have a brightness difference of < 125', function() {
-            var green      = new Pheasant.Color( 100, 255, 100 ),
-                lightgreen = new Pheasant.Color( 180, 255, 200 );
-
-            expect( lightgreen.hasSufficientBrightnessContrastWith( green ) ).to.be.false;
-            expect( green.hasSufficientBrightnessContrastWith( lightgreen ) ).to.be.false;
-        });
-
-        it( 'should accept a custom threshold', function() {
-            var green      = new Pheasant.Color( 100, 255, 100 ),
-                lightgreen = new Pheasant.Color( 180, 255, 200 ),
-                darkbrown  = new Pheasant.Color(  60,  30,  20 ),
-                lightblue  = new Pheasant.Color( 180, 200, 255 );
-
-            expect( lightgreen.hasSufficientBrightnessContrastWith( green, 25 ) ).to.be.true;
-            expect( green.hasSufficientBrightnessContrastWith( lightgreen, 25 ) ).to.be.true;
-            expect( lightblue.hasSufficientBrightnessContrastWith( darkbrown, 170 ) ).to.be.false;
-            expect( darkbrown.hasSufficientBrightnessContrastWith( lightblue, 170 ) ).to.be.false;
+            expect( lightblue.brightnessContrast( darkbrown ) ).to.be.equal( 38 );
+            expect( darkbrown.brightnessContrast( lightblue ) ).to.be.equal( 38 );
         });
 
         it( 'should not take care of the alpha channel value', function() {
             // Here, colors are 100% transparent, thus completely unreadable,
             // but the brightness difference doesn't take that into account (we
             // may change this in a future release.
-            var green      = new Pheasant.Color( 100, 255, 100, 0 ),
-                darkbrown  = new Pheasant.Color(  60,  30,  20, 0 );
+            var green     = new Pheasant.Color( 100, 255, 100, 0 ),
+                darkbrown = new Pheasant.Color(  60,  30,  20, 0 );
 
-            expect( darkbrown.hasSufficientBrightnessContrastWith( green ) ).to.be.true;
-            expect( green.hasSufficientBrightnessContrastWith( darkbrown ) ).to.be.true;
+            expect( darkbrown.brightnessContrast( green ) ).to.be.equal( 153 );
+            expect( green.brightnessContrast( darkbrown ) ).to.be.equal( 153 );
+        });
+
+    });
+
+    describe( '.hueContrast', function() {
+
+        it( 'should return undefined if the given object is not a valid color', function() {
+            var c = new Pheasant.Color( 25, 100, 123 );
+
+            expect( c.hueContrast(null) ).to.be.undefined;
+            expect( c.hueContrast('foobar') ).to.be.undefined;
+            expect( c.hueContrast(function(){}) ).to.be.undefined;
+        });
+
+        it( 'should return 0 if the two colors are the same', function() {
+            var c1 = new Pheasant.Color( 25, 100, 123 ),
+                c2 = new Pheasant.Color( 25, 100, 123 );
+
+            expect( c1.hueContrast( c2 ) ).to.be.equal( 0 );
+            expect( c2.hueContrast( c1 ) ).to.be.equal( 0 );
+        });
+
+        it( 'should return 765 if the two colors are black & white', function() {
+            var b = new Pheasant.Color(   0,   0,   0 ),
+                w = new Pheasant.Color( 255, 255, 255 );
+
+            expect( b.hueContrast( w ) ).to.be.equal( 765 );
+            expect( w.hueContrast( b ) ).to.be.equal( 765 );
         });
 
     });

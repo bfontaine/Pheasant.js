@@ -331,19 +331,28 @@
     };
 
     /**
-     * Test if the difference between two colors' brightness indexes is
-     * sufficient. By default the minimum difference is 125, but it can
-     * be changed by passing a second argument to the function. See also
-     * Color#brightness.
+     * Return the difference between two colors' brightness indexes. This
+     * is an integer between 0 and 255. It should be higher than 125 to be
+     * sufficient.
      **/
-    Pheasant.Color.prototype.hasSufficientBrightnessContrastWith = function( other, min ) {
+    Pheasant.Color.prototype.brightnessContrast = function( other ) {
         other = Pheasant.parse( other );
+        if ( !other || !other.getRGBA ) { return; }
 
-        if ( !other || !other.getRGBA ) { return false; }
+        return Math.abs(this.brightness() - other.brightness());
+    };
 
-        min   = round( min || 125 );
+    /**
+     * Return the hue contrast between two colors. This is an integer between
+     * 0 and 765. It should be higher than 500 to be sufficient.
+     **/
+    Pheasant.Color.prototype.hueContrast = function( other ) {
+        other = Pheasant.parse( other );
+        if ( !other || !other.getRGBA ) { return; }
 
-        return Math.abs(this.brightness() - other.brightness()) >= min;
+        return   Math.abs(this.red - other.red)
+               + Math.abs(this.green - other.green)
+               + Math.abs(this.blue - other.blue);
     };
 
     /**
