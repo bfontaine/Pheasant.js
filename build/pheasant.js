@@ -258,6 +258,15 @@
     };
 
     /**
+     * Return the brightness index of the color. This doesn't use the alpha
+     * channel value. The index is an integer between 0 (dark) and 255 (white).
+     **/
+    Pheasant.Color.prototype.brightness = function() {
+        // from www.had2know.com/technology/color-contrast-calculator-web-design.html
+        return round(0.299 * this.red + 0.587 * this.green + 0.114 * this.blue);
+    };
+
+    /**
      * Test if the color is darker than an other one. Return a boolean.
      **/
     Pheasant.Color.prototype.isDarkerThan = function( other ) {
@@ -319,6 +328,31 @@
 
         return sum < 0;
 
+    };
+
+    /**
+     * Return the difference between two colors' brightness indexes. This
+     * is an integer between 0 and 255. It should be higher than 125 to be
+     * sufficient.
+     **/
+    Pheasant.Color.prototype.brightnessContrast = function( other ) {
+        other = Pheasant.parse( other );
+        if ( !other || !other.getRGBA ) { return; }
+
+        return Math.abs(this.brightness() - other.brightness());
+    };
+
+    /**
+     * Return the hue contrast between two colors. This is an integer between
+     * 0 and 765. It should be higher than 500 to be sufficient.
+     **/
+    Pheasant.Color.prototype.hueContrast = function( other ) {
+        other = Pheasant.parse( other );
+        if ( !other || !other.getRGBA ) { return; }
+
+        return   Math.abs(this.red - other.red)
+               + Math.abs(this.green - other.green)
+               + Math.abs(this.blue - other.blue);
     };
 
     /**
