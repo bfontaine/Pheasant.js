@@ -175,6 +175,11 @@ between two colors.
 
 [brightness]: http://www.had2know.com/technology/color-contrast-calculator-web-design.html
 
+```js
+Pheasant.parse( '#fff' ).brightness(); // 255
+Pheasant.parse('rgb(42, 10, 134)').brightness(); // 34
+```
+
 ### .isDarkerThan
 
 This method test if the color is darker than another color. You can pass it a
@@ -202,6 +207,16 @@ This method test the equality between this color and another. You can pass it a
 
 ```js
 Pheasant.parse( '#000' ).eq( 'rgba( 0, 0, 0)' ); // true
+```
+
+### .hasSufficientBrightnessContrastWith
+
+This method checks that two colors have a sufficient brightness contrast (i.e.
+their brightness indexes are different by at least 125 points).
+
+```js
+Pheasant.parse('blue').hasSufficientBrightnessContrastWith('yellow') // true
+Pheasant.parse('blue').hasSufficientBrightnessContrastWith('darkblue'); // false
 ```
 
 ## Color Formats
@@ -366,6 +381,10 @@ You also need [PhantomJS][phantomjs].
 See the LICENSE file (MIT).
 
 ## Changelog
+
+### v0.2.2 (next version)
+
+- `Color#brightness`, `Color#hasSufficientBrightnessContrastWith`
 
 ### v0.2.1 (10/09/2013)
 

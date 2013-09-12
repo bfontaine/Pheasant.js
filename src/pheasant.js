@@ -331,6 +331,22 @@
     };
 
     /**
+     * Test if the difference between two colors' brightness indexes is
+     * sufficient. By default the minimum difference is 125, but it can
+     * be changed by passing a second argument to the function. See also
+     * Color#brightness.
+     **/
+    Pheasant.Color.prototype.hasSufficientBrightnessContrastWith = function( other, min ) {
+        other = Pheasant.parse( other );
+
+        if ( !other || !other.getRGBA ) { return false; }
+
+        min   = round( min || 125 );
+
+        return Math.abs(this.brightness() - other.brightness()) >= min;
+    };
+
+    /**
      * Return a 'Color' object using the given string, or 'null' if it can't
      * be parsed.
      **/

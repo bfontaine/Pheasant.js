@@ -1713,13 +1713,13 @@ describe( 'Color objects', function() {
         });
 
         it( 'should return 38 if the color is dark brown', function() {
-            var black = new Pheasant.Color( 60, 30, 20 );
-            expect(black.brightness()).to.equal( 38 );
+            var darkbrown = new Pheasant.Color( 60, 30, 20 );
+            expect(darkbrown.brightness()).to.equal( 38 );
         });
 
         it( 'should return 200 if the color is light blue', function() {
-            var black = new Pheasant.Color( 180, 200, 255 );
-            expect(black.brightness()).to.equal( 200 );
+            var lightblue = new Pheasant.Color( 180, 200, 255 );
+            expect(lightblue.brightness()).to.equal( 200 );
         });
 
     });
@@ -1877,4 +1877,69 @@ describe( 'Color objects', function() {
 
     });
 
+    describe( '.hasSufficientBrightnessContrastWith', function() {
+
+        it( 'should return false if the given object is not a valid color', function() {
+            var c = new Pheasant.Color( 25, 100, 123 );
+
+            expect( c.hasSufficientBrightnessContrastWith(null) ).to.be.false;
+            expect( c.hasSufficientBrightnessContrastWith('foobar') ).to.be.false;
+            expect( c.hasSufficientBrightnessContrastWith(function(){}) ).to.be.false;
+        });
+
+        it( 'should return false if the two colors are the same', function() {
+            var c1 = new Pheasant.Color( 42, 35, 201 ),
+                c2 = new Pheasant.Color( 42, 35, 201 );
+
+            expect( c1.hasSufficientBrightnessContrastWith( c2 ) ).to.be.false;
+        });
+
+        it( 'should return true if the two colors are black & white', function() {
+            var b = new Pheasant.Color(   0,   0,   0 ),
+                w = new Pheasant.Color( 255, 255, 255 );
+
+            expect( b.hasSufficientBrightnessContrastWith( w ) ).to.be.true;
+            expect( w.hasSufficientBrightnessContrastWith( b ) ).to.be.true;
+        });
+
+        it( 'should return true if the two colors have a brightness difference of >= 125', function() {
+            var darkbrown = new Pheasant.Color( 60, 30, 20 ),
+                lightblue = new Pheasant.Color( 180, 200, 255 );
+
+            expect( lightblue.hasSufficientBrightnessContrastWith( darkbrown ) ).to.be.true;
+            expect( darkbrown.hasSufficientBrightnessContrastWith( lightblue ) ).to.be.true;
+        });
+
+        it( 'should return false if the two colors have a brightness difference of < 125', function() {
+            var green      = new Pheasant.Color( 100, 255, 100 ),
+                lightgreen = new Pheasant.Color( 180, 255, 200 );
+
+            expect( lightgreen.hasSufficientBrightnessContrastWith( green ) ).to.be.false;
+            expect( green.hasSufficientBrightnessContrastWith( lightgreen ) ).to.be.false;
+        });
+
+        it( 'should accept a custom threshold', function() {
+            var green      = new Pheasant.Color( 100, 255, 100 ),
+                lightgreen = new Pheasant.Color( 180, 255, 200 ),
+                darkbrown  = new Pheasant.Color(  60,  30,  20 ),
+                lightblue  = new Pheasant.Color( 180, 200, 255 );
+
+            expect( lightgreen.hasSufficientBrightnessContrastWith( green, 25 ) ).to.be.true;
+            expect( green.hasSufficientBrightnessContrastWith( lightgreen, 25 ) ).to.be.true;
+            expect( lightblue.hasSufficientBrightnessContrastWith( darkbrown, 170 ) ).to.be.false;
+            expect( darkbrown.hasSufficientBrightnessContrastWith( lightblue, 170 ) ).to.be.false;
+        });
+
+        it( 'should not take care of the alpha channel value', function() {
+            // Here, colors are 100% transparent, thus completely unreadable,
+            // but the brightness difference doesn't take that into account (we
+            // may change this in a future release.
+            var green      = new Pheasant.Color( 100, 255, 100, 0 ),
+                darkbrown  = new Pheasant.Color(  60,  30,  20, 0 );
+
+            expect( darkbrown.hasSufficientBrightnessContrastWith( green ) ).to.be.true;
+            expect( green.hasSufficientBrightnessContrastWith( darkbrown ) ).to.be.true;
+        });
+
+    });
 });
