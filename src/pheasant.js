@@ -258,6 +258,15 @@
     };
 
     /**
+     * Return the brightness index of the color. This doesn't use the alpha
+     * channel value. The index is an integer between 0 (dark) and 255 (white).
+     **/
+    Pheasant.Color.prototype.brightness = function() {
+        // from www.had2know.com/technology/color-contrast-calculator-web-design.html
+        return round(0.299 * this.red + 0.587 * this.green + 0.114 * this.blue);
+    };
+
+    /**
      * Test if the color is darker than an other one. Return a boolean.
      **/
     Pheasant.Color.prototype.isDarkerThan = function( other ) {

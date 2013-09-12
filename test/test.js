@@ -1700,6 +1700,30 @@ describe( 'Color objects', function() {
 
     });
 
+    describe( '.brightness', function() {
+
+        it( 'should return 0 if the color is black', function() {
+            var black = new Pheasant.Color( 0, 0, 0 );
+            expect(black.brightness()).to.equal( 0 );
+        });
+
+        it( 'should return 255 if the color is white', function() {
+            var black = new Pheasant.Color( 255, 255, 255 );
+            expect(black.brightness()).to.equal( 255 );
+        });
+
+        it( 'should return 38 if the color is dark brown', function() {
+            var black = new Pheasant.Color( 60, 30, 20 );
+            expect(black.brightness()).to.equal( 38 );
+        });
+
+        it( 'should return 200 if the color is light blue', function() {
+            var black = new Pheasant.Color( 180, 200, 255 );
+            expect(black.brightness()).to.equal( 200 );
+        });
+
+    });
+
     describe( '.isDarkerThan', function() {
 
         it( 'should return `false` '

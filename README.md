@@ -167,6 +167,14 @@ c2.getRGB(); // [ 213, 213, 213 ]
 Pheasant.parse( 'white' ).negative().toString( 'colorName' ); // 'black'
 ```
 
+### .brightness
+
+This method return the [brightness index][brightness] of the color. This is an
+integer between 0 (dark) and 255 (white). It can be used to mesure the contrast
+between two colors.
+
+[brightness]: http://www.had2know.com/technology/color-contrast-calculator-web-design.html
+
 ### .isDarkerThan
 
 This method test if the color is darker than another color. You can pass it a
