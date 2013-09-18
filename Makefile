@@ -26,4 +26,4 @@ clear:
 	rm -rf ${DESTDIR}
 	rm -rf ${COVDIR}
 
-.PHONY: test
+.PHONY: build test
