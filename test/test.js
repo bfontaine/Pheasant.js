@@ -1659,6 +1659,28 @@ describe( 'Color objects', function() {
 
     });
 
+    describe( '.getRGB', function() {
+        it( 'should return the values given to the constructor', function() {
+            var r = 1, g = 2, b = 3;
+            expect(new Pheasant.Color(r, g, b).getRGB()).to.deep.equal([ r, g, b ]);
+        })
+    });
+
+    describe( '.getRGBA', function() {
+        it( 'should return the values given to the constructor', function() {
+            var r = 1, g = 2, b = 3, o = 0.6;
+            expect(new Pheasant.Color(r, g, b, o).getRGBA()).to.deep.equal([ r, g, b, o ]);
+        })
+    });
+
+    describe( '.getHSL', function() {
+        // TODO
+    });
+
+    describe( '.getHSV', function() {
+        // TODO
+    });
+
     describe( '.negative', function() {
 
         it( 'should be a function', function() {
