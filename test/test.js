@@ -1628,19 +1628,19 @@ describe( 'Color objects', function() {
     });
 
     it( 'should have a .getRGB() method', function() {
-
-        var c = new Pheasant.Color( 42, 78, 1 );
-
-        expect( c.getRGB() ).to.deep.equal([ 42, 78, 1 ]);
-
+        expect(new Pheasant.Color().getRGB).to.be.a('function');
     });
 
     it( 'should have a .getRGBA() method', function() {
+        expect(new Pheasant.Color().getRGBA).to.be.a('function');
+    });
 
-        var c = new Pheasant.Color( 42, 78, 1, 0.1 );
+    it( 'should have a .getHSL() method', function() {
+        expect(new Pheasant.Color().getHSL).to.be.a('function');
+    });
 
-        expect( c.getRGBA() ).to.deep.equal([ 42, 78, 1, 0.1 ]);
-
+    it( 'should have a .getHSV() method', function() {
+        expect(new Pheasant.Color().getHSV).to.be.a('function');
     });
 
     it( 'should default red/green/blue values to 0', function() {
@@ -1674,11 +1674,24 @@ describe( 'Color objects', function() {
     });
 
     describe( '.getHSL', function() {
-        // TODO
+        it( 'should be preserved by the parsing', function() {
+            expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSL() ).to.deep.equal([ 0, 100, 50 ]);
+            expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSL() ).to.deep.equal([ 120, 25, 20 ]);
+        });
+    });
+
+    describe( '.getHSB', function() {
+        it( 'should do the same as .getHSV', function() {
+            var c1 = new Pheasant.Color(42, 7, 245, 0.7),
+                c2 = new Pheasant.Color(255, 0, 0);
+            expect( c1.getHSB() ).to.deep.equal( c1.getHSV() );
+            expect( c2.getHSB() ).to.deep.equal( c2.getHSV() );
+        });
     });
 
     describe( '.getHSV', function() {
-        // TODO
+        expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSV() ).to.deep.equal([ 0, 100, 100 ]);
+        expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSV() ).to.deep.equal([ 120, 40, 25 ]);
     });
 
     describe( '.negative', function() {
