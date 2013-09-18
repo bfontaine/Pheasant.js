@@ -268,14 +268,14 @@
      * Return an array of Hue, Saturation and Value values.
      **/
     Pheasant.Color.prototype.getHSV = function() {
-        return rgb2hsv.apply(null, this.getRGB());
+        return rgb2hsv(this.red, this.green, this.blue);
     };
 
     /**
      * Return an array of Hue, Saturation and Lightness values.
      **/
     Pheasant.Color.prototype.getHSL = function() {
-        return rgb2hsl.apply(null, this.getRGB());
+        return rgb2hsl(this.red, this.green, this.blue);
     };
 
     /**
