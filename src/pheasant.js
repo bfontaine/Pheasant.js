@@ -146,12 +146,14 @@
          * cf http://en.literateprograms.org/RGB_to_HSV_color_space_conversion_%28C%29
          **/
         rgb2hsv = function( r, g, b ) {
-            var max = Math.max(r, g, b),
-                min = Math.min(r, g, b),
-
+            var max, min, 
                 hue, saturation, value;
 
-            value = max;
+            r = round( r ) / 255;
+            g = round( g ) / 255;
+            b = round( b ) / 255;
+
+            max = value = Math.max(r, g, b);
 
             if (value == 0) {
                 hue = saturation = 0;
@@ -163,7 +165,7 @@
             b /= value;
 
             max /= value;
-            min /= value;
+            min = Math.min(r, g, b)/value;
 
             saturation = max - min;
 
@@ -283,7 +285,7 @@
      * This is an alias to Color#getHSL.
      **/
     Pheasant.Color.prototype.getHSB = function() {
-        return this.getHSL();
+        return this.getHSV();
     };
 
     /**
