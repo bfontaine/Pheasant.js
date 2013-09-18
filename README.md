@@ -67,7 +67,6 @@ Pheasant.guessFormat( '#cccbbb' ); // 'hex6'
 Pheasant.guessFormat( '#cccb' ); // null
 ```
 
-
 ### .range
 
 This function takes an object as its argument, and return a range of colors. The
@@ -152,6 +151,43 @@ c.toString( 'hsl' ); // 'hsl(60,56%,91%)'
 
 Since it may be painful to write `Pheasant.parse( 'foo' ).toString( 'bar' )` for
 a one-time conversion, Pheasant has a method for that: `.convert`.
+
+### .getRGB
+
+This method returns an array of red, green and blue values.
+
+```js
+Pheasant.parse( 'red' ).getRGB(); // [ 255, 0, 0 ]
+```
+
+### .getRGBA
+
+This method returns an array of red, green, blue, and opacity values.
+
+```js
+Pheasant.parse( 'red' ).getRGBA();                // [ 255,   0,   0, 1   ]
+Pheasant.parse('hsla(42,12%,99%,0.5)').getRGBA(); // [ 253, 253, 252, 0.5 ]
+```
+
+### .getHSL
+
+This method returns the equivalent HSL values of the color (hue, saturation,
+lightness).
+
+```js
+Pheasant.parse('red').getHSL();  // [  0, 100, 50 ]
+Pheasant.parse('#ffe').getHSL(); // [ 60, 100, 97 ]
+```
+
+### .getHSV
+
+This method returns the equivalent HSV values of the color (hue, saturation,
+value). HSV is also called HSB (“value” being replaced by “brightness”), so
+an alias method called `.getHSB` is also available (this is exactly the same).
+
+```js
+// TODO
+```
 
 ### .negative
 
