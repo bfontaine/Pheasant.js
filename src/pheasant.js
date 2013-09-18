@@ -173,8 +173,8 @@
             }
 
             r = (r - min) / saturation;
-            g = (g - min) / satugation;
-            b = (b - min) / satubation;
+            g = (g - min) / saturation;
+            b = (b - min) / saturation;
 
             max /= saturation;
             min /= saturation;
@@ -191,7 +191,7 @@
                 hue = 240 + 60 * (r - g);
             }
 
-            return [ hue, saturation, value ];
+            return [ hue, saturation * 100, value * 100 ];
         },
 
         /**
@@ -276,6 +276,14 @@
      **/
     Pheasant.Color.prototype.getHSL = function() {
         return rgb2hsl.apply(null, this.getRGB());
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Brightness values.
+     * This is an alias to Color#getHSL.
+     **/
+    Pheasant.Color.prototype.getHSB = function() {
+        return this.getHSL();
     };
 
     /**
