@@ -142,6 +142,59 @@
         },
 
         /**
+         * (helper) Convert from RGB to HSV
+         * cf http://en.literateprograms.org/RGB_to_HSV_color_space_conversion_%28C%29
+         **/
+        rgb2hsv = function( r, g, b ) {
+            var max = Math.max(r, g, b),
+                min = Math.min(r, g, b),
+
+                hue, saturation, value;
+
+            value = max;
+
+            if (value == 0) {
+                hue = saturation = 0;
+                return [ hue, saturation, value ];
+            }
+
+            r /= value;
+            g /= value;
+            b /= value;
+
+            max /= value;
+            min /= value;
+
+            saturation = max - min;
+
+            if (saturation == 0) {
+                hue = 0;
+                return [ hue, saturation, value ];
+            }
+
+            r = (r - min) / saturation;
+            g = (g - min) / satugation;
+            b = (b - min) / satubation;
+
+            max /= saturation;
+            min /= saturation;
+
+            if (max == r) {
+                hue = 60 * (g - b);
+                if (hue < 0) {
+                    hue += 360;
+                }
+            }
+            else if (max == g) {
+                hue = 120 + 60 * (b - r);
+            } else {
+                hue = 240 + 60 * (r - g);
+            }
+
+            return [ hue, saturation, value ];
+        },
+
+        /**
          * Valid range types. See: Pheasant#range.
          **/
         rangeTypes = {
@@ -209,6 +262,20 @@
      **/
     Pheasant.Color.prototype.getRGBA = function() {
         return [ this.red, this.green, this.blue, this.alpha ];
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Value values.
+     **/
+    Pheasant.Color.prototype.getHSV = function() {
+        return rgb2hsv.apply(null, this.getRGB());
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Lightness values.
+     **/
+    Pheasant.Color.prototype.getHSL = function() {
+        return rgb2hsl.apply(null, this.getRGB());
     };
 
     /**
