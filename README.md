@@ -431,6 +431,7 @@ Dates format is DD/MM/YYYY.
 
 - `Color#brightness`, `Color#brightnessContrast`, `Color#hueContrast`
 - `Color#isLighterThan` & `Color#isDarkerThan` fixed
+- `Color#getHSL`, `Color#getHSV`, `Color#getHSB`
 
 ### v0.2.1 (10/09/2013)
 
