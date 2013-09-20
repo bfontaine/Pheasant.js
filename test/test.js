@@ -1677,6 +1677,15 @@ describe( 'Color objects', function() {
         it( 'should be preserved by the parsing', function() {
             expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSL() ).to.deep.equal([ 0, 100, 50 ]);
             expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSL() ).to.deep.equal([ 120, 25, 20 ]);
+            expect( Pheasant.parse( 'hsl(0,0%,0%)' ).getHSL() ).to.deep.equal([ 0, 0, 0 ]);
+            expect( Pheasant.parse( 'hsl(42,42%,42%)' ).getHSL() ).to.deep.equal([ 42, 42, 42 ]);
+        });
+    });
+
+    describe( '.getHSV', function() {
+        it( 'should be preserved by the parsing', function() {
+            expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSV() ).to.deep.equal([ 0, 100, 100 ]);
+            expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSV() ).to.deep.equal([ 120, 40, 25 ]);
         });
     });
 
@@ -1687,11 +1696,6 @@ describe( 'Color objects', function() {
             expect( c1.getHSB() ).to.deep.equal( c1.getHSV() );
             expect( c2.getHSB() ).to.deep.equal( c2.getHSV() );
         });
-    });
-
-    describe( '.getHSV', function() {
-        expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSV() ).to.deep.equal([ 0, 100, 100 ]);
-        expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSV() ).to.deep.equal([ 120, 40, 25 ]);
     });
 
     describe( '.negative', function() {
