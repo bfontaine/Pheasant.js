@@ -142,6 +142,24 @@
         },
 
         /**
+         * (helper) Convert from RGB to HSV
+         * code from https://gist.github.com/xpansive/1337890
+         **/
+        rgb2hsv = function( r, g, b ) {
+            var hsl = rgb2hsl(r, g, b),
+                h   = hsl[0],
+                s   = hsl[1],
+                l   = hsl[2],
+                s2;
+
+            s *= l < 50 ? (l/100) : (1-l/100);
+
+            s2 = s+l;
+
+            return [h, 2*s/s2*100, s2];
+        },
+
+        /**
          * Valid range types. See: Pheasant#range.
          **/
         rangeTypes = {
@@ -209,6 +227,28 @@
      **/
     Pheasant.Color.prototype.getRGBA = function() {
         return [ this.red, this.green, this.blue, this.alpha ];
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Value values.
+     **/
+    Pheasant.Color.prototype.getHSV = function() {
+        return rgb2hsv(this.red, this.green, this.blue);
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Lightness values.
+     **/
+    Pheasant.Color.prototype.getHSL = function() {
+        return rgb2hsl(this.red, this.green, this.blue);
+    };
+
+    /**
+     * Return an array of Hue, Saturation and Brightness values.
+     * This is an alias to Color#getHSL.
+     **/
+    Pheasant.Color.prototype.getHSB = function() {
+        return this.getHSV();
     };
 
     /**

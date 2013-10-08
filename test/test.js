@@ -1683,9 +1683,10 @@ describe( 'Color objects', function() {
     });
 
     describe( '.getHSV', function() {
-        it( 'should be preserved by the parsing', function() {
+        it( 'should return HSV values as integers', function() {
             expect( Pheasant.parse( 'hsl(0,100%,50%)' ).getHSV() ).to.deep.equal([ 0, 100, 100 ]);
             expect( Pheasant.parse( 'hsl(120,25%,20%)' ).getHSV() ).to.deep.equal([ 120, 40, 25 ]);
+            expect( Pheasant.parse( 'hsl(40,50%,60%)' ).getHSV() ).to.deep.equal([ 40, 50, 80 ]);
         });
     });
 

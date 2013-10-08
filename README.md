@@ -186,7 +186,7 @@ value). HSV is also called HSB (“value” being replaced by “brightness”),
 an alias method called `.getHSB` is also available (this is exactly the same).
 
 ```js
-// TODO
+Pheasant.parse('green').getHSV(); // [ 120, 100, 50 ]
 ```
 
 ### .negative
@@ -277,7 +277,6 @@ All standard CSS/SVG colors formats are supported.
 | hsla()      | ✔       | ✔            | `hsla`                    |
 | rgb()\*     | ✔       | ✔            | `rgb`                     |
 | rgba()\*    | ✔       | ✔            | `rgba`                    |
-
 
 Format identifiers are case-insensitive.
 

@@ -143,57 +143,20 @@
 
         /**
          * (helper) Convert from RGB to HSV
-         * cf http://en.literateprograms.org/RGB_to_HSV_color_space_conversion_%28C%29
+         * code from https://gist.github.com/xpansive/1337890
          **/
         rgb2hsv = function( r, g, b ) {
-            var max, min, 
-                hue, saturation, value;
+            var hsl = rgb2hsl(r, g, b),
+                h   = hsl[0],
+                s   = hsl[1],
+                l   = hsl[2],
+                s2;
 
-            r = round( r ) / 255;
-            g = round( g ) / 255;
-            b = round( b ) / 255;
+            s *= l < 50 ? (l/100) : (1-l/100);
 
-            max = value = Math.max(r, g, b);
+            s2 = s+l;
 
-            if (value == 0) {
-                hue = saturation = 0;
-                return [ hue, saturation, value ];
-            }
-
-            r /= value;
-            g /= value;
-            b /= value;
-
-            max /= value;
-            min = Math.min(r, g, b)/value;
-
-            saturation = max - min;
-
-            if (saturation == 0) {
-                hue = 0;
-                return [ hue, saturation, value ];
-            }
-
-            r = (r - min) / saturation;
-            g = (g - min) / saturation;
-            b = (b - min) / saturation;
-
-            max /= saturation;
-            min /= saturation;
-
-            if (max == r) {
-                hue = 60 * (g - b);
-                if (hue < 0) {
-                    hue += 360;
-                }
-            }
-            else if (max == g) {
-                hue = 120 + 60 * (b - r);
-            } else {
-                hue = 240 + 60 * (r - g);
-            }
-
-            return [ hue, saturation * 100, value * 100 ];
+            return [h, 2*s/s2*100, s2];
         },
 
         /**
