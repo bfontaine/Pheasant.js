@@ -15,7 +15,7 @@ test-cov: build
 	PHEASANT_COV=1 ${MOCHA} -R html-cov > coverage.html
 	rm -rf ${COVDIR}
 
-test-all: test test-client
+test-all: test test-client test-cov
 
 build: src/pheasant.js
 	mkdir -p ${DESTDIR}

@@ -1085,6 +1085,7 @@ describe( 'Stringifying', function() {
 
         it( 'should normalize colors with negative float values', function() {
 
+        expect( Pheasant.parse( [] ) ).to.be.null;
             expect(
                 new Pheasant.Color( 255, -42.5, -7 ).toString()
             ).to.equal( 'hsl(0,100%,50%)' );
@@ -1618,6 +1619,12 @@ describe( '.guessFormat', function() {
 
 describe( 'Color objects', function() {
 
+    it( 'can be created with an array', function() {
+        var c1 = new Pheasant.Color([42, 210, 0]),
+            c2 = new Pheasant.Color( 42, 210, 0 );
+        expect( c1 ).to.deep.equal( c2 );
+    });
+
     it( 'can be created without the `new` keyword', function() {
 
         var c1 = new Pheasant.Color( 1, 2, 3, 0.4 ),
@@ -1640,6 +1647,10 @@ describe( 'Color objects', function() {
     });
 
     it( 'should have a .getHSV() method', function() {
+        expect(new Pheasant.Color().getHSV).to.be.a('function');
+    });
+
+    it( 'should have a .getHSB() method', function() {
         expect(new Pheasant.Color().getHSV).to.be.a('function');
     });
 

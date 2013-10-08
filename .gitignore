@@ -3,5 +3,6 @@
 .*.swo
 /src-cov
 /dist
+/build
 /node_modules
 coverage.html

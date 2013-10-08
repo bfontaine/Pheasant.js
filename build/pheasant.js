@@ -197,11 +197,25 @@
 
     /**
      * Color constructor
+     * r [Number]: red channel (optional, default is 0)
+     * g [Number]: green channel (optional, default is 0)
+     * b [Number]: blue channel (optional, default is 0)
+     * a [Number]: alpha channel (optional, default is 1)
      **/
     Pheasant.Color = function( r, g, b, a ) {
 
+        // if the method is not called with 'new'
         if (!( this instanceof Pheasant.Color )) {
             return new Pheasant.Color( r, g, b, a );
+        }
+        
+        // if the values are given in an array
+        if ( r && !g && !b && !a
+            && typeof r.splice == 'function' && r.length >= 3 ) {
+            g = r[1];
+            b = r[2];
+            a = r[3];
+            r = r[0];
         }
 
         if ( typeof r !== 'number' ) { r = 0; }
