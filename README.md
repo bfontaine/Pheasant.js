@@ -21,7 +21,7 @@ var Pheasant = require( 'pheasant' );
 ### Client-side
 
 Include the `build/pheasant.min.js` file in your page. There’s no dependency,
-only 15ko of pure JavaScript (4.4ko gzip’d). Pheasant can also be used as an AMD
+only 15ko of pure JavaScript (4.5ko gzip’d). Pheasant can also be used as an AMD
 module.
 
 
