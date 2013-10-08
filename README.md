@@ -424,9 +424,9 @@ See the LICENSE file (MIT).
 
 ## Changelog
 
-Dates format is DD/MM/YYYY.
+Date format is DD/MM/YYYY.
 
-### v0.2.2 (next version)
+### v0.2.2 (08/10/2013)
 
 - `Color#brightness`, `Color#brightnessContrast`, `Color#hueContrast`
 - `Color#isLighterThan` & `Color#isDarkerThan` fixed
