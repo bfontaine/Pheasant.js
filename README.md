@@ -165,8 +165,8 @@ Pheasant.parse( 'red' ).getRGB(); // [ 255, 0, 0 ]
 This method returns an array of red, green, blue, and opacity values.
 
 ```js
-Pheasant.parse( 'red' ).getRGBA();                // [ 255,   0,   0, 1   ]
-Pheasant.parse('hsla(42,12%,99%,0.5)').getRGBA(); // [ 253, 253, 252, 0.5 ]
+Pheasant.parse( 'red' ).getRGBA();                  // [ 255,   0,   0, 1   ]
+Pheasant.parse( 'hsla(42,12%,99%,0.5)' ).getRGBA(); // [ 253, 253, 252, 0.5 ]
 ```
 
 ### .getHSL
@@ -175,8 +175,8 @@ This method returns the equivalent HSL values of the color (hue, saturation,
 lightness).
 
 ```js
-Pheasant.parse('red').getHSL();  // [  0, 100, 50 ]
-Pheasant.parse('#ffe').getHSL(); // [ 60, 100, 97 ]
+Pheasant.parse( 'red' ).getHSL();  // [  0, 100, 50 ]
+Pheasant.parse( '#ffe' ).getHSL(); // [ 60, 100, 97 ]
 ```
 
 ### .getHSV
@@ -186,7 +186,7 @@ value). HSV is also called HSB (“value” being replaced by “brightness”),
 an alias method called `.getHSB` is also available (this is exactly the same).
 
 ```js
-Pheasant.parse('green').getHSV(); // [ 120, 100, 50 ]
+Pheasant.parse( 'green' ).getHSV(); // [ 120, 100, 50 ]
 ```
 
 ### .negative
@@ -213,7 +213,7 @@ between two colors.
 
 ```js
 Pheasant.parse( '#fff' ).brightness(); // 255
-Pheasant.parse('rgb(42, 10, 134)').brightness(); // 34
+Pheasant.parse( 'rgb(42, 10, 134)' ).brightness(); // 34
 ```
 
 ### .isDarkerThan
@@ -251,8 +251,8 @@ This method returns the brightness contrast between the current color and
 another. It’s an integer between 0 and 255.
 
 ```js
-Pheasant.parse('blue').brightnessContrast('yellow') // true
-Pheasant.parse('blue').brightnessContrast('darkblue'); // false
+Pheasant.parse( 'blue' ).brightnessContrast( 'yellow' ) // true
+Pheasant.parse( 'blue' ).brightnessContrast( 'darkblue' ); // false
 ```
 
 ### .hueContrast
