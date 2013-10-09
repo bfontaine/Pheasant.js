@@ -18,6 +18,11 @@
     var Pheasant = {},
 
         /**
+         * Color constructor. Will be available outside as `Pheasant.Color`.
+         **/
+        Color,
+
+        /**
          * Default String format. Used for toString().
          **/
         defaultStringFormat = 'hex6',
@@ -202,11 +207,11 @@
      * b [Number]: blue channel (optional, default is 0)
      * a [Number]: alpha channel (optional, default is 1)
      **/
-    Pheasant.Color = function( r, g, b, a ) {
+    Color = function( r, g, b, a ) {
 
         // if the method is not called with 'new'
-        if (!( this instanceof Pheasant.Color )) {
-            return new Pheasant.Color( r, g, b, a );
+        if (!( this instanceof Color )) {
+            return new Color( r, g, b, a );
         }
         
         // if the values are given in an array
@@ -232,28 +237,28 @@
     /**
      * Return an array of Red, Green and Blue values.
      **/
-    Pheasant.Color.prototype.getRGB = function() {
+    Color.prototype.getRGB = function() {
         return [ this.red, this.green, this.blue ];
     };
 
     /**
      * Return an array of Red, Green, Blue and Alpha values.
      **/
-    Pheasant.Color.prototype.getRGBA = function() {
+    Color.prototype.getRGBA = function() {
         return [ this.red, this.green, this.blue, this.alpha ];
     };
 
     /**
      * Return an array of Hue, Saturation and Value values.
      **/
-    Pheasant.Color.prototype.getHSV = function() {
+    Color.prototype.getHSV = function() {
         return rgb2hsv(this.red, this.green, this.blue);
     };
 
     /**
      * Return an array of Hue, Saturation and Lightness values.
      **/
-    Pheasant.Color.prototype.getHSL = function() {
+    Color.prototype.getHSL = function() {
         return rgb2hsl(this.red, this.green, this.blue);
     };
 
@@ -261,14 +266,14 @@
      * Return an array of Hue, Saturation and Brightness values.
      * This is an alias to Color#getHSL.
      **/
-    Pheasant.Color.prototype.getHSB = function() {
+    Color.prototype.getHSB = function() {
         return this.getHSV();
     };
 
     /**
      * Return a formatted string of the current color.
      **/
-    Pheasant.Color.prototype.toString = function( format ) {
+    Color.prototype.toString = function( format ) {
 
         var stringifier;
 
@@ -297,12 +302,12 @@
     };
 
     /**
-     * Return a new Color object, representing the negative of the current
+     * Return a new Color object representing the negative of the current
      * color.
      **/
-    Pheasant.Color.prototype.negative = function() {
+    Color.prototype.negative = function() {
 
-        return new Pheasant.Color(
+        return new Color(
             255 - this.red,
             255 - this.green,
             255 - this.blue,
@@ -315,7 +320,7 @@
      * Return the brightness index of the color. This doesn't use the alpha
      * channel value. The index is an integer between 0 (dark) and 255 (white).
      **/
-    Pheasant.Color.prototype.brightness = function() {
+    Color.prototype.brightness = function() {
         // from www.had2know.com/technology/color-contrast-calculator-web-design.html
         return round(0.299 * this.red + 0.587 * this.green + 0.114 * this.blue);
     };
@@ -323,7 +328,7 @@
     /**
      * Test if the color is darker than an other one. Return a boolean.
      **/
-    Pheasant.Color.prototype.isDarkerThan = function( other ) {
+    Color.prototype.isDarkerThan = function( other ) {
         other = Pheasant.parse( other );
         if ( !other || !other.getRGBA ) { return false; }
 
@@ -333,7 +338,7 @@
     /**
      * Test if the color is the same as an other one. Return a boolean.
      **/
-    Pheasant.Color.prototype.eq = function( other ) {
+    Color.prototype.eq = function( other ) {
 
         var rgba1, rgba2, i;
 
@@ -357,7 +362,7 @@
     /**
      * Test if the color is lighter than an other one. Return a boolean.
      **/
-    Pheasant.Color.prototype.isLighterThan = function( other ) {
+    Color.prototype.isLighterThan = function( other ) {
         other = Pheasant.parse( other );
         if ( !other || !other.getRGBA ) { return false; }
 
@@ -369,7 +374,7 @@
      * is an integer between 0 and 255. It should be higher than 125 to be
      * sufficient.
      **/
-    Pheasant.Color.prototype.brightnessContrast = function( other ) {
+    Color.prototype.brightnessContrast = function( other ) {
         other = Pheasant.parse( other );
         if ( !other || !other.getRGBA ) { return; }
 
@@ -380,7 +385,7 @@
      * Return the hue contrast between two colors. This is an integer between
      * 0 and 765. It should be higher than 500 to be sufficient.
      **/
-    Pheasant.Color.prototype.hueContrast = function( other ) {
+    Color.prototype.hueContrast = function( other ) {
         other = Pheasant.parse( other );
         if ( !other || !other.getRGBA ) { return; }
 
@@ -539,7 +544,7 @@
 
                 if ( color.length >= 0 && color.splice ) {
 
-                    return Pheasant.Color.apply( null, color );
+                    return Color.apply( null, color );
 
                 }
 
@@ -551,7 +556,7 @@
                 if (!( 'green' in color )) { color.green = 0; }
                 if (!( 'blue'  in color )) { color.blue  = 0; }
 
-                return new Pheasant.Color(
+                return new Color(
                     color.red,
                     color.green,
                     color.blue,
@@ -732,7 +737,7 @@
         for( i = 0; i < len; step(), i++) {
 
             range.push(
-                rangeVal( Pheasant.Color.apply( null, rgba ), format )
+                rangeVal( Color.apply( null, rgba ), format )
             );
 
         }
@@ -1299,6 +1304,8 @@
         };
 
     })());
+
+    Pheasant.Color = Color;
 
     // used for people that require the module as
     //  var Pheasant = require('pheasant').Pheasant;
