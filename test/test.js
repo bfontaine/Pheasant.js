@@ -1751,6 +1751,55 @@ describe( 'Color objects', function() {
 
     });
 
+    describe( '.opposite', function() {
+
+        it( 'should be a function', function() {
+
+            expect( new Pheasant.Color().opposite ).to.be.a( 'function' );
+
+        });
+
+        it( 'should return a new Color object', function() {
+
+            var c1 = new Pheasant.Color( 0, 0, 0 ),
+                c2 = c1.opposite(),
+                c3 = c2.opposite();
+
+            expect( c2 ).to.not.equal( c1 );
+            expect( c3 ).to.not.equal( c1 );
+
+        });
+
+        it( 'should return the opposite of the current color', function() {
+
+            var white = new Pheasant.Color( 255, 255, 255 ),
+                black = new Pheasant.Color(   0,   0,   0 ),
+                red   = new Pheasant.Color( 255,   0,   0 ),
+                green = new Pheasant.Color(   0, 204,   0 );
+
+            expect( white.opposite() ).to.deep.equal( white );
+            expect( black.opposite() ).to.deep.equal( black );
+            expect( red.opposite() ).to.deep.equal( green );
+            expect( green.opposite() ).to.deep.equal( red );
+
+        });
+
+        it( 'should not change the alpha channel value', function() {
+
+            var c1 = new Pheasant.Color( 42, 17, 25 ),
+                c2 = c1.opposite();
+
+            expect( c2.alpha ).to.equal( c1.alpha );
+
+            c1.alpha = 0.77;
+            c2 = c1.opposite();
+
+            expect( c2.alpha ).to.equal( c1.alpha );
+
+        });
+
+    });
+
     describe( '.brightness', function() {
 
         it( 'should return 0 if the color is black', function() {

@@ -317,6 +317,21 @@
     };
 
     /**
+     * Return a new Color object representing the opposite of the current
+     * color.
+     **/
+    Color.prototype.opposite = function() {
+        var hsl = this.getHSL(),
+            rgba;
+        hsl[0] = (hsl[0] + 180) % 360;
+        rgba = hsl2rgb.apply(null, hsl);
+
+        rgba.push(this.alpha);
+
+        return new Color(rgba);
+    };
+
+    /**
      * Return the brightness index of the color. This doesn't use the alpha
      * channel value. The index is an integer between 0 (dark) and 255 (white).
      **/
