@@ -286,6 +286,8 @@
        
         }
 
+        format = normalizeString( format );
+
         if ( arguments.length === 0 ) {
 
             format = defaultStringFormat;

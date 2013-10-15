@@ -2001,4 +2001,30 @@ describe( 'Color objects', function() {
         });
 
     });
+
+    describe( '.toString', function() {
+
+        describe( 'optional format parameter', function() {
+
+            // test for issue #7
+            it ('should be case-insensitive', function() {
+                var c = new Pheasant.Color( 0, 0, 0 );
+
+                expect( c.toString( 'hex3' ) ).to.equal( '#000' );
+                expect( c.toString( 'hEx3' ) ).to.equal( '#000' );
+                expect( c.toString( 'HEX3' ) ).to.equal( '#000' );
+            });
+
+            it ('should trim its value', function() {
+                var c = new Pheasant.Color( 0, 0, 0 );
+
+                expect( c.toString( 'hex3  ' ) ).to.equal( '#000' );
+                expect( c.toString( '   hex3' ) ).to.equal( '#000' );
+                expect( c.toString( '  hex3 ' ) ).to.equal( '#000' );
+            });
+
+        });
+
+    });
+
 });
